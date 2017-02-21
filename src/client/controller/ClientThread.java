@@ -50,15 +50,29 @@ public class ClientThread extends Task<Void>
                 System.out.println(connection.getMessage());
                 switch (connection.getMessage().charAt(0)){
                     case ((char) 182) :
-                        //do something
+                        //Register
                         out.println(connection.getMessage());
+                        connection.setMessage("Finnished registering");
                         break;
+
+                    case ((char) 169) :
+                        out.println(connection.getMessage());
+                        recieved = in.readLine();
+                        if (recieved.equals("true")){
+                            connection.setValidLogin(true);
+                            connection.setSearcher("True");
+                        }else{
+                            connection.setSearcher(null);
+                        }
+                        connection.setMessage("Finnished logging in");
+                        break;
+
                     case ((char) 209) :
-                        //do something
+                        //Send message
                         out.println(connection.getMessage());
                         break;
+
                     default :
-                        System.out.println("default");
                         break;
                 }
             }

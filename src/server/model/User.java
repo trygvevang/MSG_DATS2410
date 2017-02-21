@@ -5,19 +5,18 @@ package server.model;
  */
 public class User
 {
-    private final int uid;
     private int port;
     private final String name;
     private String hostname, password;
+    private int status;
 
     /**
      * Since this class is only accesed by the server controller, there is no need for a control structure towards UID and name.
-     * @param uid User ID
      * @param name Full name of this user
      */
-    public User(int uid, String name, String password)
+    public User(String name, String password)
     {
-        this.uid = uid;
+        this.status = 0;
         this.name = name;
         this.password = password;
     }
@@ -29,6 +28,7 @@ public class User
      */
     public void setSocketInfo(String hostname, int port)
     {
+        this.setStatus(1);
         this.hostname = hostname;
         this.port = port;
     }
@@ -52,34 +52,18 @@ public class User
     }
 
     /**
-     * Returns this user's full name.
-     * @return full name of this user
+     * Returns this user's username.
+     * @return username for the object user
      */
     public String getName()
     {
         return name;
     }
 
-    public int getUid()
-    {
-        return uid;
-    }
-
-    public String getUidString()
-    {
-        return uid+"";
-    }
-
-    public String toStringAll()
-    {
-        String delimiter = (char) 182 + "";
-        return uid + delimiter + name + delimiter + password;
-        //return uid +"";
-    }
-
     public String toString()
     {
-        return uid+"";
+        String delimiter = (char) 182 + "";
+        return delimiter + name + delimiter + password;
     }
 
     /**
@@ -89,5 +73,20 @@ public class User
     public String getPassword()
     {
         return password;
+    }
+
+    public void setStatus(int status)
+    {
+        this.status = status;
+    }
+
+    public int getStatus()
+    {
+        return status;
+    }
+
+    public String getStatusString()
+    {
+        return status == 0 ? "Offline" : (status == 1 ? "Online" : "Busy");
     }
 }

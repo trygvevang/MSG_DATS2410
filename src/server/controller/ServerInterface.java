@@ -6,7 +6,7 @@ package server.controller;
  */
 public interface ServerInterface
 {
-    String updateUsers(String input);
-    void updateUserConnection(int uid, String ip, int port);
+    boolean registerUser(String input);
+    void updateUserConnection(String username, String host, int port);
     String loginUser(String input);
 }

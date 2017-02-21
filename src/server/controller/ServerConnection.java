@@ -101,66 +101,69 @@ public class ServerConnection extends Task<Void>
                 @Override
                 protected Void call() throws InterruptedException
                 {
-                    updateMessage("connected");
+            updateMessage("connected");
 
-                    try
-                    (
-                        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
-                    )
+            try
+            (
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
+            )
+            {
+                // Task: here is connection with a client. As long as we are here, the client has a connection with the server
+                String input;
+                while (!(input = in.readLine()).equals("EXIT")) // TODO: Change condition to some type of logout
+                {
+                    switch (input.charAt(0))
                     {
-                        // Task: here is connection with a client. As long as we are here, the client has a connection with the server
-                        String input;
-                        while (!(input = in.readLine()).equals("EXIT")) // TODO: Change condition to some type of logout
+                        case ((char) 182) : // ¶
                         {
-                            System.out.println("infinite loop");
-                            switch (input.charAt(0))
-                            {
-                                case ((char) 182) : // ¶
-                                {
-                                    //register user
-                                    updateMessage(input);
-                                    System.out.println("Registrerer ny bruker: " + input);
-//                                    out.println(connection.updateUsers(input));
-                                    break;
-                                }
-                                case ((char) 169) : // ©
-                                {
-                                    //login
-                                    updateMessage(input);
-                                    out.println(connection.loginUser(input));
-                                    break;
-                                }
-                                case ((char) 181) : //µ
-                                {
-                                    //chat request
-                                    System.out.print(in.readLine());
-                                }
-                                case ((char) 209) :
-                                {
-                                    updateMessage(input);
-//                                    connection.updateUserConnection(Integer.parseInt(input.split((char) 209 + "")[1]), socket.getInetAddress().toString(), socket.getPort());
-                                    System.out.println(input);
-                                }
-                                case ((char) 210) :
-                                    updateMessage(input);
-                                    break;
-                                default:
-                                    updateMessage(input);
-                                    out.println("Not implemented yet!");
-                            }
+                            //register user
+                            updateMessage(input);
+                            connection.registerUser(input);
+                            connection.updateUserConnection(input.split((char) 182 + "")[1], socket.getInetAddress().toString(), socket.getPort());
+                            System.out.println("Registrerer ny bruker: " + input);
+                            break;
                         }
+                        case ((char) 169) : // ©
+                        {
+                            //login
+                            updateMessage(input);
+                            String s = connection.loginUser(input);
+                            if (s.equals("true")){
+                                out.println(s);
+                                connection.updateUserConnection(input.split((char) 169 + "")[1], socket.getInetAddress().toString(), socket.getPort());
+                            }
+                            break;
+                        }
+                        case ((char) 181) : //µ
+                        {
+                            //chat request
+                            System.out.print(in.readLine());
+                        }
+                        case ((char) 209) :
+                        {
+                            updateMessage(input);
+//                                    connection.updateUserConnection(Integer.parseInt(input.split((char) 209 + "")[1]), socket.getInetAddress().toString(), socket.getPort());
+                            System.out.println(input);
+                        }
+                        case ((char) 210) :
+                            updateMessage(input);
+                            break;
+                        default:
+                            out.println("Not implemented yet!");
                     }
-                    catch (IOException e)
-                    {
-                        System.out.println("I/O Exception, with error: " + e.getMessage());
-                    }
-                    finally
-                    {
-                        updateMessage("disconnected"); // Indicate that client has disconnected
-                    }
+                }
+            }
+            catch (IOException e)
+            {
+                System.out.println("I/O Exception, with error: " + e.getMessage());
+            }
+            finally
+            {
+                updateMessage("disconnected"); // Indicate that client has disconnected
+            }
 
-                    return null;
+            return null;
                 }
 
             };

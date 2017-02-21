@@ -22,9 +22,6 @@ import java.util.List;
  */
 public class ServerMain extends Application
 {
-
-    List<User> users;
-
     /**
      * This method is both the starting- and ending point of this application.
      *
@@ -45,49 +42,5 @@ public class ServerMain extends Application
         ps.setResizable(false);
         ps.setOnCloseRequest(e -> System.exit(0));
         ps.show();
-        //network();
     }
-
-    /**
-     * To test connection with client. Made for the first pair programming session, intended towards the part of
-     * registering a user.
-     * @throws IOException if a connection fail.
-     */
-    public void network() throws IOException
-    {
-        int port = 6789;
-
-        System.out.println("About to try connecting");
-        try
-        (
-            ServerSocket sersoc = new ServerSocket(port);
-            Socket soc = sersoc.accept();
-
-            PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
-
-        )
-        {
-            InetAddress clientAddr = soc.getInetAddress();
-            int clientPort = soc.getPort();
-            String cliInfo = in.readLine();
-
-            String[] tokens = IOUser.parseLine(cliInfo, "h");
-
-            users = IOUser.read("src/server/resources/users.txt");
-            int uid = users.get(users.size() - 1).getUid();
-            uid++;
-
-            out.println(uid);
-
-            users.add(new User(uid, tokens[0], tokens[1]));
-            IOUser.write("src/server/resources/users.txt", users.get(users.size() - 1));
-        }
-        catch (IOException e)
-        {
-            System.err.println("Error");
-            System.out.println(e.getMessage());
-        }
-    }
-
 }

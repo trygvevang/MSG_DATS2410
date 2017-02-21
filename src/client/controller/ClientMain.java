@@ -27,6 +27,5 @@ public class ClientMain extends Application
         ps.setResizable(false);
         ps.setOnCloseRequest(e -> System.exit(0));
         ps.show();
-        //network();
     }
 }

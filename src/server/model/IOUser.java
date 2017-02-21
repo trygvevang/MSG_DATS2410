@@ -10,21 +10,9 @@ import java.util.List;
  */
 public class IOUser
 {
-
-    public static boolean loginconfirmation(String login, List<User> l)
-    {
-
-        String loginID = login.substring(0, 4);
-        int id = Integer.parseInt(loginID);
-        User user = l.get(id - 1001);
-        String p = user.toStringAll( );
-        boolean loginConfirmed = p.endsWith(user.getPassword( ));
-
-        return loginConfirmed;
-    }
-
     /**
      * Reads from a file, and generates a list of users
+     *
      * @param path path of the file
      * @return list of users
      * @throws IOException
@@ -43,7 +31,7 @@ public class IOUser
             for (String l = in.readLine(); l != null; l = in.readLine())
             {
                 parts = l.split(reg);
-                users.add(new User(Integer.parseInt(parts[0]), parts[1], parts[2]));
+                users.add(new User(parts[1], parts[2]));
             }
         }
         return users;
@@ -56,7 +44,7 @@ public class IOUser
      * @param u    the user containing the user information
      * @throws IOException
      */
-    public static void write(String path, User u)
+    public static void write(String path, User u) throws IOException
     {
         try
         (
@@ -65,11 +53,7 @@ public class IOUser
             PrintWriter out = new PrintWriter(bufferedWriter)
         )
         {
-            out.println(u.toStringAll());
-        }
-        catch (IOException e)
-        {
-            System.err.println("An I/O error has occured, while trying to write to the file: " + path + "\n" + e.getMessage());
+            out.println(u.toString());
         }
     }
 
@@ -81,26 +65,21 @@ public class IOUser
      * @param info  input from client. Used for creating a new user
      * @return the user id, so the user know what to log in with
      */
-    public static String register(List<User> users, String info)
+    public static boolean register(List<User> users, String info)
     {
-        String[] tokens = parseLine(info, (char) 182 + "");
-        int uid = users.get(users.size() - 1).getUid();
-        uid++;
-        User tmp = new User(uid, tokens[1], tokens[2]);
-        users.add(tmp);
-        IOUser.write("src/server/resources/users.txt", tmp);
-        return String.valueOf(uid);
-    }
+        String[] tokens = info.split((char) 182 + "");
 
-    /**
-     * Splits the string into an array of strings, based on a regular expression
-     *
-     * @param line string to be split
-     * @return String[] without the delimiter/regex
-     */
-    public static String[] parseLine(String line, String reg) //TODO: Maybe add a parameter so we can choose what the regex should be
-    {
-        return line.split(reg);
+        User tmp = new User(tokens[1], tokens[2]);
+        users.add(tmp);
+
+        try
+        {
+            IOUser.write("src/server/resources/users.txt", tmp);
+        } catch (IOException e){
+            System.err.println("I/O Exception: " + e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -112,12 +91,17 @@ public class IOUser
      */
     public static String logIn(List<User> users, String input)
     { //TODO: Fix IP and port
-        String[] info = parseLine(input, (char) 169 + "");
-        int id = Integer.parseInt(info[1]);
-        String pswdAtmpt = info[2];
+        String[] info = input.split((char) 169 + "");
+        String username = info[1];
+        String passwordAttempt = info[2];
 
-        String pswdCheck = users.get(id - 1001).getPassword();
-
-        return pswdAtmpt.equals(pswdCheck) ? "Accepted" : "Declined";
+        for (User user : users)
+        {
+            if (username.equals(user.getName()) && passwordAttempt.equals(user.getPassword())){
+                user.setStatus(1);
+                return "true";
+            }
+        }
+        return "false";
     }
 }
