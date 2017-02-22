@@ -10,5 +10,5 @@ public interface ClientInterface
     void setMessage(String message);
     void setValidLogin(boolean value);
     void setSearcher(String str);
-
+    void setUserList(String token);
 }

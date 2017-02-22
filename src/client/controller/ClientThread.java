@@ -57,9 +57,11 @@ public class ClientThread extends Task<Void>
 
                     case ((char) 169) :
                         out.println(connection.getMessage());
-                        recieved = in.readLine();
+                        String[] tokens = in.readLine().split((char) 169 + "");
+                        recieved = tokens[0];
                         if (recieved.equals("true")){
                             connection.setValidLogin(true);
+                            connection.setUserList(tokens[1]);
                             connection.setSearcher("True");
                         }else{
                             connection.setSearcher(null);

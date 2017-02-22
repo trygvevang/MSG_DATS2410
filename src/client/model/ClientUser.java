@@ -8,22 +8,13 @@ import java.util.ArrayList;
  */
 public class ClientUser
 {
-    private final String uid;
     private final String name;
-
-
     private int status = 0;
 
-    public ClientUser(String uid, String name)
+    public ClientUser(String name, String status)
     {
-        this.uid = uid;
         this.name = name;
-
-    }
-
-    public String getUid()
-    {
-        return uid;
+        this.status = Integer.parseInt(status);
     }
 
     public String getName()

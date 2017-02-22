@@ -2,16 +2,21 @@ package client.controller;
 
 import client.model.ClientUser;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
+import server.model.User;
 
 import java.net.URL;
+import java.util.Observable;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -37,6 +42,7 @@ public class ClientController implements Initializable, ClientInterface
     private boolean validLogin;
     private String searcher;
     private int counter;
+    private ObservableList<ClientUser> userObservableList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -47,6 +53,7 @@ public class ClientController implements Initializable, ClientInterface
         validLogin = false;
         searcher = "search";
         counter = 0;
+        userObservableList = FXCollections.observableArrayList();
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Message Application - Client");
@@ -244,4 +251,30 @@ public class ClientController implements Initializable, ClientInterface
     {
         searcher = str;
     }
+
+    public ObservableList<ClientUser> createUserList(String token)
+    {
+        String[] usersString = token.split((char) 208 + "");
+
+        userObservableList = FXCollections.observableArrayList();
+        for (int i = 0; i < usersString.length; i++)
+        {
+            int delimiterIndex = usersString[i].indexOf(182);
+            String name = usersString[i].substring(0,delimiterIndex);
+            String status = usersString[i].substring(delimiterIndex+1);
+            System.out.println("Username: " + name + ", Status: " + status);
+            userObservableList.add(new ClientUser(name, status));
+        }
+        return userObservableList;
+    }
+
+    @Override
+    public void setUserList(String token)
+    {
+        twUser.setItems(createUserList(token));
+        twBrukerID.setCellValueFactory(new PropertyValueFactory("name"));
+        twStatus.setCellValueFactory(new PropertyValueFactory("status"));
+    }
+
+
 }
