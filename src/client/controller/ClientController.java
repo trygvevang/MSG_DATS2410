@@ -20,10 +20,6 @@ import java.util.Observable;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-/**
- * Created by Jesper Nylend on 21.02.2017.
- * s305070
- */
 public class ClientController implements Initializable, ClientInterface
 {
     @FXML
