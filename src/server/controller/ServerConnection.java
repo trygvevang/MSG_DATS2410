@@ -123,6 +123,8 @@ public class ServerConnection extends Task<Void>
                             connection.registerUser(input);
                             username = input.split((char) 182 + "")[1];
                             connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
+//                            connection.showUserList();
+                            out.println(connection.sendUserList());
                             System.out.println("Registrerer ny bruker: " + input);
                             break;
                         }
@@ -132,21 +134,24 @@ public class ServerConnection extends Task<Void>
                             updateMessage(input);
                             String s = connection.loginUser(input);
                             if (s.equals("true")){
-                                out.println(s + (char) 169 + connection.sendUserList());
                                 username = input.split((char) 169 + "")[1];
                                 connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
+                                out.println(s + (char) 169 + connection.sendUserList());
+//                                connection.showUserList();
                             }
                             break;
                         }
                         case ((char) 181) : //µ
                         {
                             //chat request
+                            //must handle showUserList()
                             System.out.print(in.readLine());
                         }
                         case ((char) 209) :
                         {
                             updateMessage(input);
 //                                    connection.updateUserConnection(Integer.parseInt(input.split((char) 209 + "")[1]), socket.getInetAddress().toString(), socket.getPort());
+                            out.println(connection.sendUserList());
                             System.out.println(input);
                         }
                         case ((char) 210) :
@@ -156,6 +161,8 @@ public class ServerConnection extends Task<Void>
                             System.out.println("Not implemented yet!");
                             break;
                     }
+                    out.println((char) 222 + connection.sendUserList());
+
                 }
                 connection.updateUserConnection(username, null, 0, 0);
             }

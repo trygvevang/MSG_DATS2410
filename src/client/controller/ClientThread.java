@@ -52,6 +52,7 @@ public class ClientThread extends Task<Void>
                     case ((char) 182) :
                         //Register
                         out.println(connection.getMessage());
+                        connection.setUserList(in.readLine());
                         connection.setMessage("Finnished registering");
                         break;
 
@@ -73,6 +74,7 @@ public class ClientThread extends Task<Void>
                         //Send message
                         if (!(connection.getMessage().equals((char) 209 + "EXIT"))){
                             out.println(connection.getMessage());
+                            connection.setUserList(in.readLine().substring(1));
                             connection.setMessage("Sent message!");
                         }else{
                             System.out.println("EXIT");

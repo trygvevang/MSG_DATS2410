@@ -206,6 +206,7 @@ public class ClientController implements Initializable, ClientInterface
 
             resultSubmit.ifPresent(usernamePassword ->
             {
+                estConnection(host, port);
                 System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword
                         .getValue());
                 setMessage((char) 182 + usernamePassword.getKey() + (char) 182 + usernamePassword.getValue());
@@ -262,7 +263,6 @@ public class ClientController implements Initializable, ClientInterface
             int delimiterIndex = usersString[i].indexOf(182);
             String name = usersString[i].substring(0,delimiterIndex);
             String status = usersString[i].substring(delimiterIndex+1);
-            System.out.println("Username: " + name + ", Status: " + status);
             userObservableList.add(new ClientUser(name, status));
         }
         return userObservableList;

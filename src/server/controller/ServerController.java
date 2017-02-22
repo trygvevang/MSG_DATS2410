@@ -32,12 +32,26 @@ public class ServerController implements Initializable, ServerInterface
     ServerConnection serverConnection;
     private List<User> users;
     ObservableList<User> oUsers;
+    private String message;
 
+    @Override
     public void showUserList()
     {
         oUsers = FXCollections.observableArrayList(users);
         lwUsers.setItems(oUsers);
         showUInfo();
+    }
+
+    @Override
+    public void setMessage(String message)
+    {
+        this.message = message;
+    }
+
+    @Override
+    public String getMessage()
+    {
+        return message;
     }
 
     public void showUInfo()
@@ -49,7 +63,7 @@ public class ServerController implements Initializable, ServerInterface
             {
                 int i = lwUsers.getSelectionModel().getSelectedIndex();
                 User temp = users.get(i);
-
+                message = (char) 222 + "";
                 taInfo.setText("Username: " + temp.getName() +"\n" + "Password: " + temp.getPassword() + "\n" + "Port: " + temp.getPort() + "\n" + "Ipadress: " + temp.getHostname() + "\n" +
                 "Status: " + temp.getStatusString());
             }
@@ -60,6 +74,7 @@ public class ServerController implements Initializable, ServerInterface
     {
         serverConnection = new ServerConnection(6789, this);
         serverConnection.start();
+        message = "message";
 
         try
         {
