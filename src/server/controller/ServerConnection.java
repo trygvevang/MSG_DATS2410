@@ -112,7 +112,7 @@ public class ServerConnection extends Task<Void>
             {
                 // Task: here is connection with a client. As long as we are here, the client has a connection with the server
                 String input;
-                while (!(input = in.readLine()).equals((char) 209 + "EXIT")) // TODO: Change condition to some type of logout
+                while (!(input = in.readLine()).equals("EXIT")) // TODO: Change condition to some type of logout
                 {
                     switch (input.charAt(0))
                     {
@@ -153,9 +153,11 @@ public class ServerConnection extends Task<Void>
                             updateMessage(input);
                             break;
                         default:
-                            out.println("Not implemented yet!");
+                            System.out.println("Not implemented yet!");
+                            break;
                     }
                 }
+                connection.updateUserConnection(username, null, 0, 0);
             }
             catch (IOException e)
             {

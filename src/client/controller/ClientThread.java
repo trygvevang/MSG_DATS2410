@@ -69,7 +69,14 @@ public class ClientThread extends Task<Void>
 
                     case ((char) 209) :
                         //Send message
-                        out.println(connection.getMessage());
+                        if (!(connection.getMessage().equals((char) 209 + "EXIT"))){
+                            out.println(connection.getMessage());
+                            connection.setMessage("Sent message!");
+                        }else{
+                            System.out.println("EXIT");
+                            out.println("EXIT");
+                            socket.close();
+                        }
                         break;
 
                     default :

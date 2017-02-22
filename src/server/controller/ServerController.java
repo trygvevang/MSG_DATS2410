@@ -31,10 +31,11 @@ public class ServerController implements Initializable, ServerInterface
 
     ServerConnection serverConnection;
     private List<User> users;
+    ObservableList<User> oUsers;
 
     public void showUserList()
     {
-        ObservableList<User> oUsers = FXCollections.observableArrayList(users);
+        oUsers = FXCollections.observableArrayList(users);
         lwUsers.setItems(oUsers);
         showUInfo();
     }

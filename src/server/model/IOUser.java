@@ -97,7 +97,7 @@ public class IOUser
 
         for (User user : users)
         {
-            if (username.equals(user.getName()) && passwordAttempt.equals(user.getPassword())){
+            if (username.equals(user.getName()) && passwordAttempt.equals(user.getPassword()) && user.getStatus() == 0){
                 user.setStatus(1);
                 return "true";
             }
