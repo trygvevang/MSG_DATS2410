@@ -8,10 +8,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-/**
- * Created by Jesper Nylend on 21.02.2017.
- * s305070
- */
 public class ClientThread extends Task<Void>
 {
     private ClientInterface connection;
