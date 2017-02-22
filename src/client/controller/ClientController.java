@@ -30,6 +30,8 @@ public class ClientController implements Initializable, ClientInterface
     private TableColumn<ClientUser, String> twStatus;
     @FXML
     private TextArea taMsg;
+    @FXML
+    private TextArea taConv;
 
     private ClientThread ct;
     private String host;
@@ -39,6 +41,7 @@ public class ClientController implements Initializable, ClientInterface
     private String searcher;
     private int counter;
     private ObservableList<ClientUser> userObservableList;
+    private String otherUsername;
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -117,7 +120,8 @@ public class ClientController implements Initializable, ClientInterface
                 if (dialogButton == loginButtonType)
                 {
                     return new Pair<>(username.getText(), password.getText());
-                }else if (dialogButton == ButtonType.CLOSE) {
+                } else if (dialogButton == ButtonType.CLOSE)
+                {
                     System.exit(0);
                 }
                 return null;
@@ -131,13 +135,17 @@ public class ClientController implements Initializable, ClientInterface
                         .getValue());
                 setMessage((char) 169 + usernamePassword.getKey() + (char) 169 + usernamePassword.getValue());
                 estConnection(host, port);
-                while (searcher != null){
-                    if (validLogin){
+                while (searcher != null)
+                {
+                    if (validLogin)
+                    {
                         return;
-                    }else if (counter < 75_000){ //counter for how long the while-loop should wait for an answer from server
+                    } else if (counter < 75_000)
+                    { //counter for how long the while-loop should wait for an answer from server
                         counter++;
                         System.out.println(counter);
-                    }else {
+                    } else
+                    {
                         System.exit(0);
                     }
                 }
@@ -191,7 +199,8 @@ public class ClientController implements Initializable, ClientInterface
                 if (dialogButton == registerButtonType)
                 {
                     return new Pair<>(username.getText(), password.getText());
-                }else if (dialogButton == ButtonType.CLOSE) {
+                } else if (dialogButton == ButtonType.CLOSE)
+                {
                     System.out.println("Please restart the program, to try again.");
                     System.exit(0);
                 }
@@ -222,7 +231,7 @@ public class ClientController implements Initializable, ClientInterface
 
     public void handleSend()
     {
-        setMessage((char) 209 + taMsg.getText());
+        setMessage((char) 209 + otherUsername + (char) 209 + taMsg.getText());
     }
 
     //File -> Log out
@@ -233,7 +242,8 @@ public class ClientController implements Initializable, ClientInterface
     }
 
     //File -> Update list
-    public void handleUpdateList(){
+    public void handleUpdateList()
+    {
         setMessage((char) 223 + "");
     }
 
@@ -269,8 +279,8 @@ public class ClientController implements Initializable, ClientInterface
         for (int i = 0; i < usersString.length; i++)
         {
             int delimiterIndex = usersString[i].indexOf(182);
-            String name = usersString[i].substring(0,delimiterIndex);
-            String status = usersString[i].substring(delimiterIndex+1);
+            String name = usersString[i].substring(0, delimiterIndex);
+            String status = usersString[i].substring(delimiterIndex + 1);
             userObservableList.add(new ClientUser(name, status));
         }
         return userObservableList;
@@ -284,5 +294,13 @@ public class ClientController implements Initializable, ClientInterface
         twStatus.setCellValueFactory(new PropertyValueFactory("status"));
     }
 
-
+    @Override
+    public void printMessage(String s)
+    {
+        System.out.println("printer melding:        |      " + s);
+        if (s != null && !s.equals("null") && s.length() > 0)
+        {
+            taConv.appendText(s + "\n");
+        }
+    }
 }

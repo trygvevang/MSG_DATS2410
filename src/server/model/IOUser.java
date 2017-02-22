@@ -24,9 +24,9 @@ public class IOUser
         String[] parts;
 
         try
-        (
-            BufferedReader in = new BufferedReader(new FileReader(new File(path)))
-        )
+                (
+                        BufferedReader in = new BufferedReader(new FileReader(new File(path)))
+                )
         {
             for (String l = in.readLine(); l != null; l = in.readLine())
             {
@@ -47,11 +47,11 @@ public class IOUser
     public static void write(String path, User u) throws IOException
     {
         try
-        (
-            FileWriter fileWriterw = new FileWriter(path, true);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriterw);
-            PrintWriter out = new PrintWriter(bufferedWriter)
-        )
+                (
+                        FileWriter fileWriterw = new FileWriter(path, true);
+                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriterw);
+                        PrintWriter out = new PrintWriter(bufferedWriter)
+                )
         {
             out.println(u.toString());
         }
@@ -75,7 +75,8 @@ public class IOUser
         try
         {
             IOUser.write("src/server/resources/users.txt", tmp);
-        } catch (IOException e){
+        } catch (IOException e)
+        {
             System.err.println("I/O Exception: " + e.getMessage());
             return false;
         }
@@ -97,23 +98,29 @@ public class IOUser
 
         for (User user : users)
         {
-            if (username.equals(user.getName()) && passwordAttempt.equals(user.getPassword()) && user.getStatus() == 0){
+            if (username.equals(user.getName()) && passwordAttempt.equals(user.getPassword()) && user.getStatus() == 0)
+            {
                 user.setStatus(1);
                 return "true";
             }
         }
         return "false";
     }
-    
+
     public static String getUserList(List<User> users)
     {
         String s = "";
         User t;
-        for (int i = 0; i < users.size( ); i++)
+        for (int i = 0; i < users.size(); i++)
         {
             t = users.get(i);
-            s +=  t.getName() + (char) 182 + t.getStatus() + (char) 208;
+            s += t.getName() + (char) 182 + t.getStatus() + (char) 208;
         }
         return s;
     }
+
+//    public static String getPersonalMessage(){
+//
+//    }
+
 }

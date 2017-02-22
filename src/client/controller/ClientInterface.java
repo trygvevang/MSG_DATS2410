@@ -7,4 +7,6 @@ public interface ClientInterface
     void setValidLogin(boolean value);
     void setSearcher(String str);
     void setUserList(String token);
+
+    void printMessage(String s);
 }

@@ -8,4 +8,11 @@ public interface ServerInterface
     String sendUserList();
     void showUserList();
     void requestChat(String username);
+    void setMessage(String msg);
+
+    String getMessage();
+
+    void addPersonalMessage(String username, String msg);
+
+    String getQueueMsg(String username);
 }

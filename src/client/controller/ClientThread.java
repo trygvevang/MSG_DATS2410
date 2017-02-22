@@ -45,7 +45,6 @@ public class ClientThread extends Task<Void>
             String recieved;
             while (connection.getMessage() != null){
                 sleep(200);
-                System.out.println(connection.getMessage());
                 switch (connection.getMessage().charAt(0)){
                     case ((char) 182) :
                         //Register
@@ -72,7 +71,8 @@ public class ClientThread extends Task<Void>
                         //Send message
                         if (!(connection.getMessage().equals((char) 209 + "EXIT"))){
                             out.println(connection.getMessage());
-                            connection.setMessage("Sent message!");
+                            connection.setMessage("Message Sent!");
+
                         }else{
                             System.out.println("EXIT");
                             out.println("EXIT");
@@ -85,9 +85,15 @@ public class ClientThread extends Task<Void>
                         connection.setUserList(in.readLine());
                         connection.setMessage("Updated userlist");
                         break;
+
                     default :
+                        System.out.println("Default here");
+                        out.println((char) 224);
+                        connection.printMessage(in.readLine());
                         break;
                 }
+                System.out.println("in.readLine()");
+//                connection.printMessage(in.readLine());
             }
         }catch (IOException e){
             System.err.println("I/O Error: " + e.getMessage());

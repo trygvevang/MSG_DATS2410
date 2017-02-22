@@ -14,8 +14,12 @@ import server.model.User;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Controlling all the scenes for the server application.
@@ -33,49 +37,16 @@ public class ServerController implements Initializable, ServerInterface
     private List<User> users;
     ObservableList<User> oUsers;
     private String message;
-
-    @Override
-    public void showUserList()
-    {
-        oUsers = FXCollections.observableArrayList(users);
-        lwUsers.setItems(oUsers);
-        showUInfo();
-    }
-
-    @Override
-    public void requestChat(String username)
-    {
-        for (User user :
-                users)
-        {
-            if (username.equals(user.getName()) && user.getStatus() == 1) // If uname is found, and that user has status "online"
-            {
-                //setRequest();
-            }
-        }
-    }
-
-    public void showUInfo()
-    {
-        lwUsers.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<User>()
-        {
-            @Override
-            public void changed(ObservableValue<? extends User> observable, User oldValue, User newValue)
-            {
-                int i = lwUsers.getSelectionModel().getSelectedIndex();
-                User temp = users.get(i);
-                message = (char) 222 + "";
-                taInfo.setText("Username: " + temp.getName() +"\n" + "Password: " + temp.getPassword() + "\n" + "Port: " + temp.getPort() + "\n" + "Ipadress: " + temp.getHostname() + "\n" +
-                "Status: " + temp.getStatusString());
-            }
-        });
-    }
+    private ArrayList<LinkedBlockingQueue<String>> msgQueues;
+    private HashMap<String, ConcurrentLinkedQueue<String>> userChatQueues;
 
     public ServerController()
     {
+//        msgQueues = new ArrayList<>();
+        userChatQueues = new HashMap<>();
+        message = "message";
         serverConnection = new ServerConnection(6789, this);
         serverConnection.start();
-        message = "message";
 
         try
         {
@@ -99,6 +70,81 @@ public class ServerController implements Initializable, ServerInterface
             }
         });
         showUserList();
+    }
+
+    @Override
+    public void showUserList()
+    {
+        oUsers = FXCollections.observableArrayList(users);
+        lwUsers.setItems(oUsers);
+        showUInfo();
+    }
+
+    @Override
+    public void requestChat(String username)
+    {
+        for (User user :
+                users)
+        {
+            if (username.equals(user.getName()) && user.getStatus() == 1) // If uname is found, and that user has status "online"
+            {
+                //setRequest();
+            }
+        }
+    }
+
+    @Override
+    public void setMessage(String msg)
+    {
+        this.message = msg;
+    }
+
+    @Override
+    public String getMessage()
+    {
+        return message;
+    }
+
+    @Override
+    public void addPersonalMessage(String username, String msg)
+    {
+        System.out.println(msg + " : addPersonalMessage");
+        ConcurrentLinkedQueue<String> correctQueue;
+        if (userChatQueues.get(username) == null){
+            correctQueue = new ConcurrentLinkedQueue<>();
+            userChatQueues.put(username, correctQueue);
+        }else {
+            correctQueue = userChatQueues.get(username);
+        }
+        correctQueue.add(msg.substring(1));
+    }
+
+    @Override
+    public String getQueueMsg(String username)
+    {
+        ConcurrentLinkedQueue<String> userQueue = userChatQueues.get(username);
+        if (userQueue != null && userQueue.size() != 0) {
+            System.out.println("Pulls message: " + userQueue.peek());
+            return userQueue.poll();
+        }
+        System.out.println("fant ingen melding");
+        return null;
+    }
+
+    public void showUInfo()
+    {
+        lwUsers.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<User>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends User> observable, User oldValue, User newValue)
+            {
+                int i = lwUsers.getSelectionModel().getSelectedIndex();
+                User temp = users.get(i);
+                message = (char) 222 + "";
+                taInfo.setText("Username: " + temp.getName() +"\n" + "Password: " + temp.getPassword() + "\n" + "Port: " + temp.getPort() + "\n" + "Ipadress: " + temp.getHostname() + "\n" +
+                        "Status: " + temp.getStatusString());
+            }
+        });
     }
 
     /**

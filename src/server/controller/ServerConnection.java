@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import jdk.nashorn.internal.ir.Block;
 import server.model.User;
 
 import java.io.BufferedReader;
@@ -12,8 +13,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Multi client server.
@@ -114,6 +120,7 @@ public class ServerConnection extends Task<Void>
                 String input;
                 while (!(input = in.readLine()).equals("EXIT")) // TODO: Change condition to some type of logout
                 {
+//                    sleep(1000);
                     switch (input.charAt(0))
                     {
                         case ((char) 182) : // ¶
@@ -146,9 +153,10 @@ public class ServerConnection extends Task<Void>
                             //must handle showUserList()
                             System.out.print(in.readLine());
                         }
-                        case ((char) 209) :
-                        {
-//                            System.out.println(input);
+                        case ((char) 209) : //Gets a normal message from this client
+                        {   // 209 USERNAME 209 MESSAGE
+                            System.out.println(input);
+                           connection.addPersonalMessage(username, input); //TODO: fix not to send to yourself
                         }
                         case ((char) 210) :
                             break;
@@ -158,8 +166,12 @@ public class ServerConnection extends Task<Void>
                         case ((char) 223) : //client asks for updated userlist
                             out.println(connection.sendUserList());
                             break;
+                        case ((char) 224) :
+                            System.out.println("Ber om nyeste melding");
+                            out.println(connection.getQueueMsg(username));
+                            break;
                         default:
-                            System.out.println("Not implemented yet!");
+
                             break;
                     }
                 }
