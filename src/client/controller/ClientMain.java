@@ -6,10 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-/**
- * Created by Jesper Nylend on 21.02.2017.
- * s305070
- */
 public class ClientMain extends Application
 {
     public static void main(String... args)

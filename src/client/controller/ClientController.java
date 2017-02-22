@@ -7,7 +7,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
@@ -15,10 +14,6 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-/**
- * Created by Jesper Nylend on 21.02.2017.
- * s305070
- */
 public class ClientController implements Initializable, ClientInterface
 {
     @FXML

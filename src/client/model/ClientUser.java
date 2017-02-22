@@ -1,11 +1,5 @@
 package client.model;
 
-import java.util.ArrayList;
-
-/**
- * Created by Jesper Nylend on 21.02.2017.
- * s305070
- */
 public class ClientUser
 {
     private final String uid;
