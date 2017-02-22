@@ -225,10 +225,16 @@ public class ClientController implements Initializable, ClientInterface
         setMessage((char) 209 + taMsg.getText());
     }
 
+    //File -> Log out
     public void handleLogout()
     {
         setMessage(null);
 
+    }
+
+    //File -> Update list
+    public void handleUpdateList(){
+        setMessage((char) 223 + "");
     }
 
     @Override

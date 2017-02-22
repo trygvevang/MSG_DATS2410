@@ -72,7 +72,6 @@ public class ClientThread extends Task<Void>
                         //Send message
                         if (!(connection.getMessage().equals((char) 209 + "EXIT"))){
                             out.println(connection.getMessage());
-                            connection.setUserList(in.readLine());
                             connection.setMessage("Sent message!");
                         }else{
                             System.out.println("EXIT");
@@ -81,6 +80,10 @@ public class ClientThread extends Task<Void>
                         }
                         break;
                     //set message til char 222 som ber om ny oppdatert ulist
+                    case ((char) 223) :
+                        out.println((char)  223 + " Update List");
+                        connection.setUserList(in.readLine());
+
                     default :
                         break;
                 }
