@@ -154,6 +154,11 @@ public class ServerConnection extends Task<Void>
                         case ((char) 210) :
                             updateMessage(input);
                             break;
+                        case ((char) 222) :
+                            System.out.println(input + " allah ");
+                            connection.updateUserConnection(username, String.valueOf(0), 0, 0);
+                            break;
+                        // case som får inn en char 222 som sier bare send ut userlist
                         default:
                             System.out.println("Not implemented yet!");
                             break;

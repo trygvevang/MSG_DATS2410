@@ -118,7 +118,7 @@ public class ServerController implements Initializable, ServerInterface
     public void updateUserConnection(String username, String host, int port, int status)
     {
         host = host.substring(1);
-
+        System.out.println(username + " : " + host + " : " + port + " : " + status);
         for (User user : users)
         {
             if (username.equals(user.getName())){

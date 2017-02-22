@@ -74,7 +74,7 @@ public class ClientThread extends Task<Void>
                         //Send message
                         if (!(connection.getMessage().equals((char) 209 + "EXIT"))){
                             out.println(connection.getMessage());
-                            connection.setUserList(in.readLine().substring(1));
+                            connection.setUserList(in.readLine());
                             connection.setMessage("Sent message!");
                         }else{
                             System.out.println("EXIT");
@@ -82,7 +82,7 @@ public class ClientThread extends Task<Void>
                             socket.close();
                         }
                         break;
-
+                    //set message til char 222 som ber om ny oppdatert ulist
                     default :
                         break;
                 }
@@ -92,9 +92,12 @@ public class ClientThread extends Task<Void>
         }
         finally
         {
-            out.println((char) 222);
-//            out.println("EXIT");
-//            socket.close();
+            out.println((char) 222 + "Logging out");
+            System.out.println(System.currentTimeMillis());
+            th.sleep(1000);
+            System.out.println(System.currentTimeMillis());
+            out.println("EXIT");
+            socket.close();
         }
         return null;
     }
