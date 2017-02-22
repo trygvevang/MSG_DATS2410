@@ -104,4 +104,15 @@ public class IOUser
         }
         return "false";
     }
+    
+    public static String getUserList(List<User> users)
+    {
+        String s = "";
+        User t;
+        for (int i = 0; i < users.size( ); i++)
+        {
+            t = users.get(i);
+            s +=  t.getName() + (char) 182 + t.getStatus() + (char) 208;
+        }
+    }
 }
