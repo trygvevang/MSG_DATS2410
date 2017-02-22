@@ -90,6 +90,12 @@ public class ClientThread extends Task<Void>
         }catch (IOException e){
             System.err.println("I/O Error: " + e.getMessage());
         }
+        finally
+        {
+            out.println((char) 222);
+//            out.println("EXIT");
+//            socket.close();
+        }
         return null;
     }
 }

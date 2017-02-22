@@ -123,7 +123,6 @@ public class ServerConnection extends Task<Void>
                             connection.registerUser(input);
                             username = input.split((char) 182 + "")[1];
                             connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
-//                            connection.showUserList();
                             out.println(connection.sendUserList());
                             System.out.println("Registrerer ny bruker: " + input);
                             break;
@@ -137,7 +136,6 @@ public class ServerConnection extends Task<Void>
                                 username = input.split((char) 169 + "")[1];
                                 connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
                                 out.println(s + (char) 169 + connection.sendUserList());
-//                                connection.showUserList();
                             }
                             break;
                         }
@@ -150,7 +148,6 @@ public class ServerConnection extends Task<Void>
                         case ((char) 209) :
                         {
                             updateMessage(input);
-//                                    connection.updateUserConnection(Integer.parseInt(input.split((char) 209 + "")[1]), socket.getInetAddress().toString(), socket.getPort());
                             out.println(connection.sendUserList());
                             System.out.println(input);
                         }
@@ -161,10 +158,7 @@ public class ServerConnection extends Task<Void>
                             System.out.println("Not implemented yet!");
                             break;
                     }
-                    out.println((char) 222 + connection.sendUserList());
-
                 }
-                connection.updateUserConnection(username, null, 0, 0);
             }
             catch (IOException e)
             {
@@ -173,8 +167,8 @@ public class ServerConnection extends Task<Void>
             }
             finally
             {
-                connection.updateUserConnection(username, null, 0, 0);
                 updateMessage("disconnected"); // Indicate that client has disconnected
+                connection.updateUserConnection(username, null, 0, 0);
             }
 
             return null;

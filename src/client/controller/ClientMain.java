@@ -20,12 +20,13 @@ public class ClientMain extends Application
     @Override
     public void start(Stage ps) throws Exception
     {
-
-        Parent root = FXMLLoader.load(getClass().getResource("/client/view/Client.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/view/Client.fxml"));
+        Parent root = loader.load();
+        ClientController controller = loader.getController();
         ps.setScene(new Scene(root));
         ps.setTitle("Message Application - Server");
         ps.setResizable(false);
-        ps.setOnCloseRequest(e -> System.exit(0));
+        ps.setOnCloseRequest(e -> controller.handleLogout());
         ps.show();
     }
 }
