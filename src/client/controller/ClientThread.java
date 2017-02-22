@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import static java.lang.Thread.sleep;
+
 public class ClientThread extends Task<Void>
 {
     private ClientInterface connection;
@@ -42,7 +44,7 @@ public class ClientThread extends Task<Void>
 
             String recieved;
             while (connection.getMessage() != null){
-                th.sleep(200);
+                sleep(200);
                 System.out.println(connection.getMessage());
                 switch (connection.getMessage().charAt(0)){
                     case ((char) 182) :
@@ -90,10 +92,12 @@ public class ClientThread extends Task<Void>
         {
             out.println((char) 222 + "Logging out");
             System.out.println(System.currentTimeMillis());
-            th.sleep(1000);
+            sleep(1000);
             System.out.println(System.currentTimeMillis());
             out.println("EXIT");
             socket.close();
+            sleep(500);
+            System.exit(0);
         }
         return null;
     }

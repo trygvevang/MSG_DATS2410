@@ -228,6 +228,7 @@ public class ClientController implements Initializable, ClientInterface
     public void handleLogout()
     {
         setMessage(null);
+
     }
 
     @Override
