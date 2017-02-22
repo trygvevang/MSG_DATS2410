@@ -99,14 +99,14 @@ public class ServerController implements Initializable, ServerInterface
     }
 
     @Override
-    public void updateUserConnection(String username, String host, int port)
+    public void updateUserConnection(String username, String host, int port, int status)
     {
         host = host.substring(1);
 
         for (User user : users)
         {
             if (username.equals(user.getName())){
-                user.setSocketInfo(host, port);
+                user.setSocketInfo(host, port, status);
                 break;
             }
         }

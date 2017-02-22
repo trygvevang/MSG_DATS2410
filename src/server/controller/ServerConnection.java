@@ -39,10 +39,10 @@ public class ServerConnection extends Task<Void>
         {
             while (true)
             {
-                Socket connection = serverSocket.accept();
+                Socket sock = serverSocket.accept();
 
-                ClientService cs = new ClientService(connection, this.connection);
-                String client = connection.getInetAddress().getHostAddress() + ":" + connection.getPort();
+                ClientService cs = new ClientService(sock, this.connection);
+                String client = sock.getInetAddress().getHostAddress() + ":" + sock.getPort();
 
                 cs.messageProperty().addListener((obs, oldMessage, newMessage) ->
                 {
@@ -102,6 +102,7 @@ public class ServerConnection extends Task<Void>
                 protected Void call() throws InterruptedException
                 {
             updateMessage("connected");
+            String username = "";
 
             try
             (
@@ -111,7 +112,7 @@ public class ServerConnection extends Task<Void>
             {
                 // Task: here is connection with a client. As long as we are here, the client has a connection with the server
                 String input;
-                while (!(input = in.readLine()).equals("EXIT")) // TODO: Change condition to some type of logout
+                while (!(input = in.readLine()).equals((char) 209 + "EXIT")) // TODO: Change condition to some type of logout
                 {
                     switch (input.charAt(0))
                     {
@@ -120,7 +121,8 @@ public class ServerConnection extends Task<Void>
                             //register user
                             updateMessage(input);
                             connection.registerUser(input);
-                            connection.updateUserConnection(input.split((char) 182 + "")[1], socket.getInetAddress().toString(), socket.getPort());
+                            username = input.split((char) 182 + "")[1];
+                            connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
                             System.out.println("Registrerer ny bruker: " + input);
                             break;
                         }
@@ -131,7 +133,8 @@ public class ServerConnection extends Task<Void>
                             String s = connection.loginUser(input);
                             if (s.equals("true")){
                                 out.println(s);
-                                connection.updateUserConnection(input.split((char) 169 + "")[1], socket.getInetAddress().toString(), socket.getPort());
+                                username = input.split((char) 169 + "")[1];
+                                connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
                             }
                             break;
                         }
@@ -156,10 +159,12 @@ public class ServerConnection extends Task<Void>
             }
             catch (IOException e)
             {
+                connection.updateUserConnection(username, null, 0, 0);
                 System.out.println("I/O Exception, with error: " + e.getMessage());
             }
             finally
             {
+                connection.updateUserConnection(username, null, 0, 0);
                 updateMessage("disconnected"); // Indicate that client has disconnected
             }
 

@@ -189,6 +189,7 @@ public class ClientController implements Initializable, ClientInterface
                 {
                     return new Pair<>(username.getText(), password.getText());
                 }else if (dialogButton == ButtonType.CLOSE) {
+                    System.out.println("Please restart the program, to try again.");
                     System.exit(0);
                 }
                 return null;

@@ -26,9 +26,9 @@ public class User
      * @param hostname IP address
      * @param port port number
      */
-    public void setSocketInfo(String hostname, int port)
+    public void setSocketInfo(String hostname, int port, int status)
     {
-        this.setStatus(1);
+        this.setStatus(status);
         this.hostname = hostname;
         this.port = port;
     }
