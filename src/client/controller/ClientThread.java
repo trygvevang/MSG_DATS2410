@@ -83,7 +83,8 @@ public class ClientThread extends Task<Void>
                     case ((char) 223) :
                         out.println((char)  223 + " Update List");
                         connection.setUserList(in.readLine());
-
+                        connection.setMessage("Updated userlist");
+                        break;
                     default :
                         break;
                 }
