@@ -114,5 +114,6 @@ public class IOUser
             t = users.get(i);
             s +=  t.getName() + (char) 182 + t.getStatus() + (char) 208;
         }
+        return s;
     }
 }
