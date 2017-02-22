@@ -141,17 +141,16 @@ public class ServerConnection extends Task<Void>
                         }
                         case ((char) 181) : //µ
                         {
+                            connection.requestChat(input.substring(1));
                             //chat request
                             //must handle showUserList()
                             System.out.print(in.readLine());
                         }
                         case ((char) 209) :
                         {
-                            updateMessage(input);
 //                            System.out.println(input);
                         }
                         case ((char) 210) :
-                            updateMessage(input);
                             break;
                         case ((char) 222) : //Logging off
                             connection.updateUserConnection(username, String.valueOf(0), 0, 0);

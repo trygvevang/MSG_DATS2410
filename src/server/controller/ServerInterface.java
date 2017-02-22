@@ -7,6 +7,5 @@ public interface ServerInterface
     String loginUser(String input);
     String sendUserList();
     void showUserList();
-    void setMessage(String message);
-    String getMessage();
+    void requestChat(String username);
 }

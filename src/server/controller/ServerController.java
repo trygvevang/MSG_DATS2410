@@ -43,15 +43,16 @@ public class ServerController implements Initializable, ServerInterface
     }
 
     @Override
-    public void setMessage(String message)
+    public void requestChat(String username)
     {
-        this.message = message;
-    }
-
-    @Override
-    public String getMessage()
-    {
-        return message;
+        for (User user :
+                users)
+        {
+            if (username.equals(user.getName()) && user.getStatus() == 1) // If uname is found, and that user has status "online"
+            {
+                //setRequest();
+            }
+        }
     }
 
     public void showUInfo()
