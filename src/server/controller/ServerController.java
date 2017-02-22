@@ -128,4 +128,15 @@ public class ServerController implements Initializable, ServerInterface
         return IOUser.logIn(users, input);
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String sendUserList()
+    {
+
+        return IOUser.getUserList(users);
+    }
+
 }

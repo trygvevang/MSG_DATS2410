@@ -132,7 +132,7 @@ public class ServerConnection extends Task<Void>
                             updateMessage(input);
                             String s = connection.loginUser(input);
                             if (s.equals("true")){
-                                out.println(s);
+                                out.println(s + (char) 169 + connection.sendUserList());
                                 username = input.split((char) 169 + "")[1];
                                 connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
                             }
