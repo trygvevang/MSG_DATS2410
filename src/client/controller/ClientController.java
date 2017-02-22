@@ -214,6 +214,44 @@ public class ClientController implements Initializable, ClientInterface
         }
     }
 
+    public void requeastChat ()
+    {
+        /*
+        ClientUser user;
+        try{
+            user = twUser.getSelectionModel().getSelectedItem();
+            System.out.println(user.getName());
+        }
+        catch (Exception e)
+        {
+            System.out.println("requestChat exepion");
+        }
+*/      String username = "";
+        boolean online = false;
+        try {
+            ClientUser user = twUser.getSelectionModel().getSelectedItem();
+
+            username = user.getName();
+            online = user.getStatus() == 1;
+        } catch (Exception e)
+        {
+            System.out.println("exeption in requestChat");
+        }
+        TextInputDialog dialog = new TextInputDialog(username);
+
+        dialog.setTitle("Choose your chatter");
+        dialog.setHeaderText(null);
+        dialog.setContentText("Who would you like to chat with");
+
+// Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()){
+            System.out.println("You want to chat with " + result.get());
+
+
+
+        }
+    }
     private void estConnection(String host, int port)
     {
         ct = new ClientThread(host, port, this);
