@@ -154,16 +154,24 @@ public class ServerConnection extends Task<Void>
                             //must handle showUserList()
                             System.out.println("Connect: " + input);
                             out.println((char)181 + "Connected to user");
+                            break;
                             //System.out.print(in.readLine());
                         }
                         case ((char) 209) : //Gets a normal message from this client
                         {   // 209 USERNAME 209 MESSAGE
                             String[] info = input.split(String.valueOf((char) 209));
+                            connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 2);
                             connection.addPersonalMessage(info[1], info[2]);
+                            out.println(connection.sendUserList());
+                            break;
 //                           connection.addPersonalMessage(input); //TODO: fix not to send to yourself
                         }
-                        case ((char) 210) :
+                        case ((char) 210) : //Disconnect from chat
+                        {
+                            connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
+                            out.println("Disconnected from current chat.\n");
                             break;
+                        }
                         case ((char) 222) : //Logging off
                             connection.updateUserConnection(username, String.valueOf(0), 0, 0);
                             break;

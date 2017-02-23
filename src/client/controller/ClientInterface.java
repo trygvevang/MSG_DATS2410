@@ -9,4 +9,5 @@ public interface ClientInterface
     void setUserList(String token);
 
     void printMessage(String s);
+    void printServerMessage(String s);
 }
