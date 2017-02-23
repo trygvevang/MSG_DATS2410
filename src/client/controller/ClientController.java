@@ -4,20 +4,16 @@ import client.model.ClientUser;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import server.model.User;
 
 import java.net.URL;
-import java.util.Observable;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -222,21 +218,12 @@ public class ClientController implements Initializable, ClientInterface
         }
     }
 
-    public void requeastChat ()
+    public void requestChat ()
     {
-        /*
-        ClientUser user;
-        try{
-            user = twUser.getSelectionModel().getSelectedItem();
-            System.out.println(user.getName());
-        }
-        catch (Exception e)
-        {
-            System.out.println("requestChat exepion");
-        }
-*/      String username = "";
+        String username = "";
         boolean online = false;
-        try {
+        try
+        {
             ClientUser user = twUser.getSelectionModel().getSelectedItem();
 
             username = user.getName();
@@ -247,18 +234,15 @@ public class ClientController implements Initializable, ClientInterface
         }
         TextInputDialog dialog = new TextInputDialog(username);
 
-        dialog.setTitle("Choose your chatter");
+        dialog.setTitle("Connect with user");
         dialog.setHeaderText(null);
-        dialog.setContentText("Who would you like to chat with");
+        dialog.setContentText("Who would you like to chat with: ");
 
-
-// Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()){
+        if (result.isPresent())
+        {
             System.out.println("You want to chat with " + result.get());
             setMessage((char)181 + result.get());
-
-
         }
     }
     private void estConnection(String host, int port)
