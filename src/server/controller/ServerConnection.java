@@ -154,16 +154,26 @@ public class ServerConnection extends Task<Void>
                             //must handle showUserList()
                             System.out.println("Connect: " + input);
                             out.println((char)181 + "Connected to user");
+                            break;
                             //System.out.print(in.readLine());
                         }
                         case ((char) 209) : //Gets a normal message from this client
                         {   // 209 USERNAME 209 MESSAGE
                             String[] info = input.split(String.valueOf((char) 209));
+                            connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 2);
                             connection.addPersonalMessage(info[1], info[2]);
+                            out.println(connection.sendUserList());
+                            break;
 //                           connection.addPersonalMessage(input); //TODO: fix not to send to yourself
                         }
-                        case ((char) 210) :
+                        case ((char) 210) : //Disconnect from chat
+                        {
+                            String[] info = input.substring(1).split(String.valueOf((char) 209));
+                            connection.addPersonalMessage(info[1], (char) 231 + info[2]);
+                            connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
+                            out.println("Disconnected from current chat.\n");
                             break;
+                        }
                         case ((char) 222) : //Logging off
                             connection.updateUserConnection(username, String.valueOf(0), 0, 0);
                             break;
@@ -173,6 +183,14 @@ public class ServerConnection extends Task<Void>
                         case ((char) 224) :
                             System.out.println("Ber om nyeste melding");
                             out.println(connection.getQueueMsg(username));
+                            break;
+                        case ((char) 199) :
+                            System.out.println("received disc and trying to disc self:     " + input);
+                            String[] info = input.split(String.valueOf((char) 209));
+                            System.out.println(info[1] + " : " + info[2] + " trollololololololollollolllllololoolololol");
+                            connection.addPersonalMessage(info[1], info[2]);
+                            connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
+                            out.println("Disconnected from current chat.\n");
                             break;
                         default:
 

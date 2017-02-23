@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static java.lang.Thread.sleep;
+
 public class ClientController implements Initializable, ClientInterface
 {
     @FXML
@@ -263,6 +265,14 @@ public class ClientController implements Initializable, ClientInterface
     //File -> Connect
     public void requestChat()
     {
+        setMessage((char) 223 + "");
+        try
+        {
+            sleep(200);
+        } catch (InterruptedException e)
+        {
+            System.err.println(e.getMessage());
+        }
         String username = "";
         int t = twUser.getSelectionModel().getFocusedIndex();
         System.out.println();
@@ -294,6 +304,12 @@ public class ClientController implements Initializable, ClientInterface
     public void handleUpdateList()
     {
         setMessage((char) 223 + "");
+    }
+
+    public void handleDisconnectChat()
+    {
+        setMessage((char) 210 + getSendMessageTo() + (char) 209 + getYourUsername());
+        setSendMessageTo("");
     }
 
     @Override
@@ -353,8 +369,24 @@ public class ClientController implements Initializable, ClientInterface
         if (s != null && !s.equals("null") && s.length() > 0)
         {
             System.out.println(s);
+            if (s.charAt(0) == (char) 231){
+
+                setMessage((char) 199 + "" + (char) 199 + "" + (char) 209 + getSendMessageTo() + (char) 209 + getYourUsername());
+                return;
+            }else if (s.charAt(0) == (char) 240){
+                setSendMessageTo("");
+                return;
+            }
             setSendMessageTo((char) 209 + s.split(":")[0]);
             taConv.appendText(s + "\n");
+        }
+    }
+
+    @Override
+    public void printServerMessage(String s)
+    {
+        if (s != null && !s.equals("null") && s.length() > 0){
+            taConv.appendText(s);
         }
     }
 

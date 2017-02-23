@@ -70,24 +70,33 @@ public class ClientThread extends Task<Void>
                     case ((char) 209) :
                         //Send message
                         System.out.println(connection.getMessage());
-                            out.println(connection.getMessage());
-                            connection.setMessage("Message Sent!");
+                        out.println(connection.getMessage());
+                        connection.setMessage("Message Sent!");
+                        connection.setUserList(in.readLine());
                         break;
+
+                    case ((char) 210) :
+                        out.println(connection.getMessage());
+                        connection.printServerMessage(in.readLine());
+                        connection.setMessage("Disconnected from chat.");
+                        break;
+
                     //set message til char 222 som ber om ny oppdatert ulist
                     case ((char) 223) :
                         out.println((char)  223 + " Update List");
                         connection.setUserList(in.readLine());
                         connection.setMessage("Updated userlist");
                         break;
-
+                    case ((char) 199):
+                        System.out.println(connection.getMessage());
+                        out.println(connection.getMessage());
+                        connection.setMessage("Sent disconnect");
                     default :
                         System.out.println("Default here");
                         out.println((char) 224);
                         connection.printMessage(in.readLine());
                         break;
                 }
-                System.out.println("in.readLine()");
-//                connection.printMessage(in.readLine());
             }
         }catch (IOException e){
             System.err.println("I/O Error: " + e.getMessage());
