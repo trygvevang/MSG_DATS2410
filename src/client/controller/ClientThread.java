@@ -79,6 +79,15 @@ public class ClientThread extends Task<Void>
                         }
                         break;
                     //set message til char 222 som ber om ny oppdatert ulist
+
+                    case ((char)181) :
+                        //connect with user
+                        System.out.println("message is: "+connection.getMessage());
+                        out.print(connection.getMessage());
+                        connection.setMessage("Connected to user");
+                        System.out.println(in.toString());
+                        break;
+
                     default :
                         break;
                 }

@@ -143,7 +143,9 @@ public class ServerConnection extends Task<Void>
                         {
                             //chat request
                             //must handle showUserList()
-                            System.out.print(in.readLine());
+                            System.out.println("Connect: " + input);
+                            out.println((char)181 + "Connected to user");
+                            //System.out.print(in.readLine());
                         }
                         case ((char) 209) :
                         {

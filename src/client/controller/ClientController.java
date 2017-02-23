@@ -4,6 +4,7 @@ import client.model.ClientUser;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -138,7 +139,14 @@ public class ClientController implements Initializable, ClientInterface
                         counter++;
                         System.out.println(counter);
                     }else {
-                        System.exit(0);
+                        Alert wrongConfirmation = new Alert(Alert.AlertType.ERROR);
+                        wrongConfirmation.setTitle("Wrong login!");
+                        wrongConfirmation.setHeaderText(null);
+                        wrongConfirmation.setContentText("Submitted name and password combination does not exist!");
+
+                        wrongConfirmation.showAndWait();
+                        initialize(location, resources);
+                        //System.exit(0);
                     }
                 }
             });
@@ -243,11 +251,12 @@ public class ClientController implements Initializable, ClientInterface
         dialog.setHeaderText(null);
         dialog.setContentText("Who would you like to chat with");
 
+
 // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()){
             System.out.println("You want to chat with " + result.get());
-
+            setMessage((char)181 + result.get());
 
 
         }
