@@ -143,21 +143,14 @@ public class ClientController implements Initializable, ClientInterface
                     {
                         setYourUsername(uname);
                         return;
-                    } else if (counter < 75_000)
+                    } else if (counter < 100_000)
                     { //counter for how long the while-loop should wait for an answer from server
                         counter++;
                         System.out.println(counter);
                     }
                     else
                     {
-                        Alert wrongConfirmation = new Alert(Alert.AlertType.ERROR);
-                        wrongConfirmation.setTitle("Wrong login!");
-                        wrongConfirmation.setHeaderText(null);
-                        wrongConfirmation.setContentText("Submitted name and password combination does not exist!");
-
-                        wrongConfirmation.showAndWait();
-                        initialize(location, resources);
-                        //System.exit(0);
+                        System.exit(0);
                     }
                 }
             });
@@ -279,7 +272,6 @@ public class ClientController implements Initializable, ClientInterface
         }
 
         if (onlineUsers.size() > 0) {
-
             ChoiceDialog<String> cdialog = new ChoiceDialog<String>(onlineUsers.get(0), onlineUsers);
             cdialog.setTitle("Users online");
             cdialog.setHeaderText(null);
@@ -295,6 +287,7 @@ public class ClientController implements Initializable, ClientInterface
                 System.out.println("Your choice: " + result.get());
             }
         }
+
     }
 
     //File -> Update list
@@ -332,12 +325,16 @@ public class ClientController implements Initializable, ClientInterface
         String[] usersString = token.split((char) 208 + "");
 
         userObservableList = FXCollections.observableArrayList();
+
         for (int i = 0; i < usersString.length; i++)
         {
             int delimiterIndex = usersString[i].indexOf(182);
             String name = usersString[i].substring(0, delimiterIndex);
             String status = usersString[i].substring(delimiterIndex + 1);
-            userObservableList.add(new ClientUser(name, status));
+            if (!name.equals(yourUsername))
+            {
+                userObservableList.add(new ClientUser(name, status));
+            }
         }
         return userObservableList;
     }
@@ -347,7 +344,7 @@ public class ClientController implements Initializable, ClientInterface
     {
         twUser.setItems(createUserList(token));
         twBrukerID.setCellValueFactory(new PropertyValueFactory("name"));
-        twStatus.setCellValueFactory(new PropertyValueFactory("status"));
+        twStatus.setCellValueFactory(new PropertyValueFactory("statusString"));
     }
 
     @Override
