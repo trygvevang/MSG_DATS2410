@@ -145,9 +145,17 @@ public class ClientController implements Initializable, ClientInterface
                     { //counter for how long the while-loop should wait for an answer from server
                         counter++;
                         System.out.println(counter);
-                    } else
+                    }
+                    else
                     {
-                        System.exit(0);
+                        Alert wrongConfirmation = new Alert(Alert.AlertType.ERROR);
+                        wrongConfirmation.setTitle("Wrong login!");
+                        wrongConfirmation.setHeaderText(null);
+                        wrongConfirmation.setContentText("Submitted name and password combination does not exist!");
+
+                        wrongConfirmation.showAndWait();
+                        initialize(location, resources);
+                        //System.exit(0);
                     }
                 }
             });
