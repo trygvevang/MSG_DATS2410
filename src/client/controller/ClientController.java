@@ -354,7 +354,8 @@ public class ClientController implements Initializable, ClientInterface
     {
         if (s != null && !s.equals("null") && s.length() > 0)
         {
-            setSendMessageTo(s.split(":")[0]);
+            System.out.println(s);
+            setSendMessageTo((char) 209 + s.split(":")[0]);
             taConv.appendText(s + "\n");
         }
     }
