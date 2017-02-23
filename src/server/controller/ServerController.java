@@ -37,12 +37,10 @@ public class ServerController implements Initializable, ServerInterface
     private List<User> users;
     ObservableList<User> oUsers;
     private String message;
-    private ArrayList<LinkedBlockingQueue<String>> msgQueues;
     private HashMap<String, ConcurrentLinkedQueue<String>> userChatQueues;
 
     public ServerController()
     {
-//        msgQueues = new ArrayList<>();
         userChatQueues = new HashMap<>();
         message = "message";
         serverConnection = new ServerConnection(6789, this);
@@ -83,14 +81,7 @@ public class ServerController implements Initializable, ServerInterface
     @Override
     public void requestChat(String username)
     {
-        for (User user :
-                users)
-        {
-            if (username.equals(user.getName()) && user.getStatus() == 1) // If uname is found, and that user has status "online"
-            {
-                //setRequest();
-            }
-        }
+
     }
 
     @Override
@@ -105,6 +96,8 @@ public class ServerController implements Initializable, ServerInterface
         return message;
     }
 
+
+
     @Override
     public void addPersonalMessage(String username, String msg)
     {
@@ -116,8 +109,28 @@ public class ServerController implements Initializable, ServerInterface
         }else {
             correctQueue = userChatQueues.get(username);
         }
-        correctQueue.add(msg.substring(1));
+        correctQueue.add(msg);
     }
+
+
+
+/*
+    @Override
+    public void addPersonalMessage(String msg)
+    {
+        System.out.println(msg + " : addPersonalMessage");
+
+        String[] info = msg.split(String.valueOf(209));
+        String username = info[1];
+        ConcurrentLinkedQueue<String> correctQueue;
+        if (userChatQueues.get(username) == null){
+            correctQueue = new ConcurrentLinkedQueue<>();
+            userChatQueues.put(username, correctQueue);
+        }else {
+            correctQueue = userChatQueues.get(username);
+        }
+        correctQueue.add(info[2]);
+    }*/
 
     @Override
     public String getQueueMsg(String username)

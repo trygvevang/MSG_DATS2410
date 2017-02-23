@@ -10,13 +10,10 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import server.model.User;
 
 import java.net.URL;
-import java.util.Observable;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -41,7 +38,8 @@ public class ClientController implements Initializable, ClientInterface
     private String searcher;
     private int counter;
     private ObservableList<ClientUser> userObservableList;
-    private String otherUsername;
+    private String yourUsername;
+    private String sendMessageTo;
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -53,6 +51,7 @@ public class ClientController implements Initializable, ClientInterface
         searcher = "search";
         counter = 0;
         userObservableList = FXCollections.observableArrayList();
+        sendMessageTo = "";
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Message Application - Client");
@@ -83,7 +82,7 @@ public class ClientController implements Initializable, ClientInterface
             ButtonType loginButtonType = new ButtonType("Log in", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CLOSE);
 
-            // Create the username and password labels and fields.
+            // Create the sendMessageTo and password labels and fields.
             GridPane grid = new GridPane();
             grid.setHgap(10);
             grid.setVgap(10);
@@ -99,7 +98,7 @@ public class ClientController implements Initializable, ClientInterface
             grid.add(new Label("Password:"), 0, 1);
             grid.add(password, 1, 1);
 
-            // Enable/Disable login button depending on whether a username was entered.
+            // Enable/Disable login button depending on whether a sendMessageTo was entered.
             Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
             loginButton.setDisable(true);
 
@@ -111,10 +110,10 @@ public class ClientController implements Initializable, ClientInterface
 
             dialog.getDialogPane().setContent(grid);
 
-            // Request focus on the username field by default.
+            // Request focus on the sendMessageTo field by default.
             Platform.runLater(() -> username.requestFocus());
 
-            // Convert the result to a username-password-pair when the login button is clicked.
+            // Convert the result to a sendMessageTo-password-pair when the login button is clicked.
             dialog.setResultConverter(dialogButton ->
             {
                 if (dialogButton == loginButtonType)
@@ -131,14 +130,16 @@ public class ClientController implements Initializable, ClientInterface
 
             resultSubmit.ifPresent(usernamePassword ->
             {
-                System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword
+                String uname = usernamePassword.getKey();
+                System.out.println("Username=" + uname + ", Password=" + usernamePassword
                         .getValue());
-                setMessage((char) 169 + usernamePassword.getKey() + (char) 169 + usernamePassword.getValue());
+                setMessage((char) 169 + uname + (char) 169 + usernamePassword.getValue());
                 estConnection(host, port);
                 while (searcher != null)
                 {
                     if (validLogin)
                     {
+                        setYourUsername(uname);
                         return;
                     } else if (counter < 75_000)
                     { //counter for how long the while-loop should wait for an answer from server
@@ -162,7 +163,7 @@ public class ClientController implements Initializable, ClientInterface
             ButtonType registerButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().addAll(registerButtonType, ButtonType.CLOSE);
 
-            // Create the username and password labels and fields.
+            // Create the sendMessageTo and password labels and fields.
             GridPane grid = new GridPane();
             grid.setHgap(10);
             grid.setVgap(10);
@@ -178,7 +179,7 @@ public class ClientController implements Initializable, ClientInterface
             grid.add(new Label("Password:"), 0, 1);
             grid.add(password, 1, 1);
 
-            // Enable/Disable login button depending on whether a username was entered.
+            // Enable/Disable login button depending on whether a sendMessageTo was entered.
             Node registerButton = dialog.getDialogPane().lookupButton(registerButtonType);
             registerButton.setDisable(true);
 
@@ -190,10 +191,10 @@ public class ClientController implements Initializable, ClientInterface
 
             dialog.getDialogPane().setContent(grid);
 
-            // Request focus on the username field by default.
+            // Request focus on the sendMessageTo field by default.
             Platform.runLater(() -> username.requestFocus());
 
-            // Convert the result to a username-password-pair when the login button is clicked.
+            // Convert the result to a sendMessageTo-password-pair when the login button is clicked.
             dialog.setResultConverter(dialogButton ->
             {
                 if (dialogButton == registerButtonType)
@@ -231,14 +232,55 @@ public class ClientController implements Initializable, ClientInterface
 
     public void handleSend()
     {
-        setMessage((char) 209 + otherUsername + (char) 209 + taMsg.getText());
+
+        if (!getSendMessageTo().equals("")){
+        setMessage(getSendMessageTo() + (char) 209 + getYourUsername() + ": " + taMsg.getText());
+        }else {
+            Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+
+            dialog.setTitle("Not the right use");
+            dialog.setHeaderText(null);
+            dialog.setContentText("Please select a user with a status of 1 and connect with that user\nbefore you can send a message");
+
+            dialog.showAndWait();
+        }
     }
 
     //File -> Log out
     public void handleLogout()
     {
         setMessage(null);
+    }
 
+    //File -> Connect
+    public void requestChat()
+    {
+        boolean online = false;
+        try
+        {
+            ClientUser user = twUser.getSelectionModel().getSelectedItem();
+
+            setSendMessageTo(user.getName());
+            online = user.getStatus() == 1;
+        } catch (Exception e)
+        {
+            System.out.println("exeption in requestChat");
+        }
+        if (online)
+        {
+            TextInputDialog dialog = new TextInputDialog(getSendMessageTo());
+
+            dialog.setTitle("Connect with user");
+            dialog.setHeaderText(null);
+            dialog.setContentText("Who would you like to chat with: ");
+
+            Optional<String> result = dialog.showAndWait();
+            if (result.isPresent())
+            {
+                System.out.println("You want to chat with " + result.get());
+                setSendMessageTo((char) 209 + result.get()); //TODO: fix so not sending message
+            }
+        }
     }
 
     //File -> Update list
@@ -302,5 +344,25 @@ public class ClientController implements Initializable, ClientInterface
         {
             taConv.appendText(s + "\n");
         }
+    }
+
+    public void setSendMessageTo(String sendMessageTo)
+    {
+        this.sendMessageTo = sendMessageTo;
+    }
+
+    public String getSendMessageTo()
+    {
+        return sendMessageTo;
+    }
+
+    public void setYourUsername(String yourUsername)
+    {
+        this.yourUsername = yourUsername;
+    }
+
+    public String getYourUsername()
+    {
+        return yourUsername;
     }
 }

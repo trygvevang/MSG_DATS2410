@@ -69,15 +69,9 @@ public class ClientThread extends Task<Void>
 
                     case ((char) 209) :
                         //Send message
-                        if (!(connection.getMessage().equals((char) 209 + "EXIT"))){
+                        System.out.println(connection.getMessage());
                             out.println(connection.getMessage());
                             connection.setMessage("Message Sent!");
-
-                        }else{
-                            System.out.println("EXIT");
-                            out.println("EXIT");
-                            socket.close();
-                        }
                         break;
                     //set message til char 222 som ber om ny oppdatert ulist
                     case ((char) 223) :

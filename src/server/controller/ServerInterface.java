@@ -12,6 +12,7 @@ public interface ServerInterface
 
     String getMessage();
 
+//    void addPersonalMessage(String msg);
     void addPersonalMessage(String username, String msg);
 
     String getQueueMsg(String username);

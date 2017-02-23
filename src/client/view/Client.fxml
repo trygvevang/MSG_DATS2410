@@ -12,6 +12,7 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Log out" />
                         <MenuItem mnemonicParsing="false" onAction="#handleUpdateList" text="Update list" />
+                        <MenuItem mnemonicParsing="false" onAction="#requestChat" text="Connect with" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">

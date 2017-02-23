@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -155,8 +156,9 @@ public class ServerConnection extends Task<Void>
                         }
                         case ((char) 209) : //Gets a normal message from this client
                         {   // 209 USERNAME 209 MESSAGE
-                            System.out.println(input);
-                           connection.addPersonalMessage(username, input); //TODO: fix not to send to yourself
+                            String[] info = input.split(String.valueOf((char) 209));
+                            connection.addPersonalMessage(info[1], info[2]);
+//                           connection.addPersonalMessage(input); //TODO: fix not to send to yourself
                         }
                         case ((char) 210) :
                             break;
