@@ -227,7 +227,6 @@ public class ClientController implements Initializable, ClientInterface
             ClientUser user = twUser.getSelectionModel().getSelectedItem();
 
             username = user.getName();
-            online = user.getStatus() == 1;
         } catch (Exception e)
         {
             System.out.println("exeption in requestChat");
@@ -239,12 +238,22 @@ public class ClientController implements Initializable, ClientInterface
         dialog.setContentText("Who would you like to chat with: ");
 
         Optional<String> result = dialog.showAndWait();
-        if (result.isPresent())
+
+        for (ClientUser user : userObservableList)
         {
-            System.out.println("You want to chat with " + result.get());
+            if (user.getName() == username)
+            {
+                if (user.getStatus() == 1)
+                    online = true;
+            }
+        }
+
+        if (result.isPresent() && online)
+        {
             setMessage((char)181 + result.get());
         }
     }
+
     private void estConnection(String host, int port)
     {
         ct = new ClientThread(host, port, this);
