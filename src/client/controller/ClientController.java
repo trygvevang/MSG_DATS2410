@@ -38,8 +38,8 @@ public class ClientController implements Initializable, ClientInterface
     private String searcher;
     private int counter;
     private ObservableList<ClientUser> userObservableList;
-    private String yourUsername;
-    private String sendMessageTo;
+    private String yourUsername; // Your username
+    private String sendMessageTo; // Username for the person you are chatting with
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -241,9 +241,14 @@ public class ClientController implements Initializable, ClientInterface
     public void handleSend()
     {
 
-        if (!getSendMessageTo().equals("")){
-        setMessage(getSendMessageTo() + (char) 209 + getYourUsername() + ": " + taMsg.getText());
-        }else {
+        if (!getSendMessageTo().equals(""))
+        {
+            setMessage(getSendMessageTo() + (char) 209 + getYourUsername() + ": " + taMsg.getText());
+            taConv.appendText(getYourUsername() + ": " + taMsg.getText() + "\n");
+            taMsg.clear();
+        }
+        else
+        {
             Alert dialog = new Alert(Alert.AlertType.INFORMATION);
 
             dialog.setTitle("Not the right use");
@@ -347,9 +352,9 @@ public class ClientController implements Initializable, ClientInterface
     @Override
     public void printMessage(String s)
     {
-        System.out.println("printer melding:        |      " + s);
         if (s != null && !s.equals("null") && s.length() > 0)
         {
+            setSendMessageTo(s.split(":")[0]);
             taConv.appendText(s + "\n");
         }
     }
