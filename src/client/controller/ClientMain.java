@@ -20,7 +20,7 @@ public class ClientMain extends Application
         Parent root = loader.load();
         ClientController controller = loader.getController();
         ps.setScene(new Scene(root));
-        ps.setTitle("Message Application - Server");
+        ps.setTitle("Message Application - Client");
         ps.setResizable(false);
         ps.setOnCloseRequest(e -> controller.handleLogout());
         ps.show();
