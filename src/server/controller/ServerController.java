@@ -120,7 +120,7 @@ public class ServerController implements Initializable, ServerInterface
             System.out.println("Pulls message: " + userQueue.peek());
             return userQueue.poll();
         }
-        System.out.println("fant ingen melding");
+//        System.out.println("fant ingen melding");
         return null;
     }
 

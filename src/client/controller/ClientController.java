@@ -368,17 +368,18 @@ public class ClientController implements Initializable, ClientInterface
     {
         if (s != null && !s.equals("null") && s.length() > 0)
         {
-            System.out.println(s);
+            System.out.println("Print message: " + s);
             if (s.charAt(0) == (char) 231){
-
-                setMessage((char) 199 + "" + (char) 199 + "" + (char) 209 + getSendMessageTo() + (char) 209 + getYourUsername());
-                return;
-            }else if (s.charAt(0) == (char) 240){
+                System.out.println("Asked to disconnect: " + s);
+                setMessage((char) 199 + "" + (char) 209 + "" + getYourUsername() + (char) 209 + getYourUsername());
+            }else if (s.charAt(0) == (char) 199){
+                System.out.println("Disconnected");
+                setMessage("Disconnected");
                 setSendMessageTo("");
-                return;
-            }
+            }else{
             setSendMessageTo((char) 209 + s.split(":")[0]);
             taConv.appendText(s + "\n");
+            }
         }
     }
 
