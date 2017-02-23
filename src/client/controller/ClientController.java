@@ -315,7 +315,7 @@ public class ClientController implements Initializable, ClientInterface
 
     public void handleDisconnectChat()
     {
-        setMessage((char) 210 + "");
+        setMessage((char) 210 + getSendMessageTo() + (char) 209 + getYourUsername());
         setSendMessageTo("");
     }
 
@@ -372,6 +372,10 @@ public class ClientController implements Initializable, ClientInterface
         if (s != null && !s.equals("null") && s.length() > 0)
         {
             System.out.println(s);
+            if (s.charAt(0) == (char) 231){
+                handleDisconnectChat();
+                return;
+            }
             setSendMessageTo((char) 209 + s.split(":")[0]);
             taConv.appendText(s + "\n");
         }

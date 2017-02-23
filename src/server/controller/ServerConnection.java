@@ -168,6 +168,8 @@ public class ServerConnection extends Task<Void>
                         }
                         case ((char) 210) : //Disconnect from chat
                         {
+                            String[] info = input.substring(1).split(String.valueOf((char) 209));
+                            connection.addPersonalMessage(info[1], (char) 231 + info[2]);
                             connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
                             out.println("Disconnected from current chat.\n");
                             break;

@@ -94,8 +94,6 @@ public class ClientThread extends Task<Void>
                         connection.printMessage(in.readLine());
                         break;
                 }
-                System.out.println("in.readLine()");
-//                connection.printMessage(in.readLine());
             }
         }catch (IOException e){
             System.err.println("I/O Error: " + e.getMessage());
