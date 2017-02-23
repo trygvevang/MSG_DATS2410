@@ -14,6 +14,8 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -268,30 +270,29 @@ public class ClientController implements Initializable, ClientInterface
     //File -> Connect
     public void requestChat()
     {
-        boolean online = false;
-        try
-        {
-            ClientUser user = twUser.getSelectionModel().getSelectedItem();
-
-            setSendMessageTo(user.getName());
-            online = user.getStatus() == 1;
-        } catch (Exception e)
-        {
-            System.out.println("exeption in requestChat");
+        String username = "";
+        int t = twUser.getSelectionModel().getFocusedIndex();
+        System.out.println();
+        List<String> onlineUsers = new ArrayList<String>();
+        for (ClientUser user : userObservableList) {
+            if (user.getStatus() == 1) onlineUsers.add(user.getName());
         }
-        if (online)
-        {
-            TextInputDialog dialog = new TextInputDialog(getSendMessageTo());
 
-            dialog.setTitle("Connect with user");
-            dialog.setHeaderText(null);
-            dialog.setContentText("Who would you like to chat with: ");
+        if (onlineUsers.size() > 0) {
 
-            Optional<String> result = dialog.showAndWait();
-            if (result.isPresent())
-            {
-                System.out.println("You want to chat with " + result.get());
-                setSendMessageTo((char) 209 + result.get()); //TODO: fix so not sending message
+            ChoiceDialog<String> cdialog = new ChoiceDialog<String>(onlineUsers.get(0), onlineUsers);
+            cdialog.setTitle("Users online");
+            cdialog.setHeaderText(null);
+            cdialog.setContentText("Choose user to connect");
+            if (!twUser.getSelectionModel().isEmpty()) {
+                ClientUser user = twUser.getSelectionModel().getSelectedItem();
+                username = user.getName();
+                if (user.getStatus() == 1) cdialog.setSelectedItem(username);
+            }
+            Optional<String> result = cdialog.showAndWait();
+            if (result.isPresent()) {
+                setSendMessageTo((char) 209 + result.get());
+                System.out.println("Your choice: " + result.get());
             }
         }
     }
