@@ -87,7 +87,10 @@ public class ClientThread extends Task<Void>
                         connection.setUserList(in.readLine());
                         connection.setMessage("Updated userlist");
                         break;
-
+                    case ((char) 199):
+                        System.out.println(connection.getMessage());
+                        out.println(connection.getMessage());
+                        connection.setMessage("Sent disconnect");
                     default :
                         System.out.println("Default here");
                         out.println((char) 224);

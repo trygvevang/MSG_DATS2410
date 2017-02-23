@@ -184,6 +184,14 @@ public class ServerConnection extends Task<Void>
                             System.out.println("Ber om nyeste melding");
                             out.println(connection.getQueueMsg(username));
                             break;
+                        case ((char) 199) :
+                            System.out.println("received disc and trying to disc self:     " + input);
+                            String[] info = input.split(String.valueOf((char) 209));
+                            System.out.println(info[1] + " : " + info[2] + " trollololololololollollolllllololoolololol");
+                            connection.addPersonalMessage(info[1], info[2]);
+                            connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
+                            out.println("Disconnected from current chat.\n");
+                            break;
                         default:
 
                             break;
