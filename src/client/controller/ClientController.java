@@ -56,6 +56,8 @@ public class ClientController implements Initializable, ClientInterface
         counter = 0;
         userObservableList = FXCollections.observableArrayList();
         sendMessageTo = "";
+        twBrukerID.setSortable(false);
+        twStatus.setSortable(false);
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Message Application - Client");
