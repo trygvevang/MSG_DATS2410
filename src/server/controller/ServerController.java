@@ -15,6 +15,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Controlling all the scenes for the server application.
  */
@@ -48,7 +50,8 @@ public class ServerController implements Initializable, ServerInterface
 
     private void updateShowedList()
     {
-        oUsers = FXCollections.observableArrayList(serverConnection.getUser());
+        users = serverConnection.getUser();
+        oUsers = FXCollections.observableArrayList(users);
         try{
         lwUsers.setItems(oUsers);
         } catch (Exception e){
@@ -73,20 +76,25 @@ public class ServerController implements Initializable, ServerInterface
 
     private void showUInfo()
     {
-
-        lwUsers.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<User>()
+        try
         {
-            @Override
-            public void changed(ObservableValue<? extends User> observable, User oldValue, User newValue)
+            lwUsers.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<User>()
             {
-                users = serverConnection.getUser();
-                int i = lwUsers.getSelectionModel().getSelectedIndex();
-                User temp = users.get(i);
-                message = (char) 222 + "";
-                taInfo.setText("Username: " + temp.getName() +"\n" + "Password: " + temp.getPassword() + "\n" + "Port: " + temp.getPort() + "\n" + "Ipadress: " + temp.getHostname() + "\n" +
-                        "Status: " + temp.getStatusString());
-            }
-        });
+                @Override
+                public void changed(ObservableValue<? extends User> observable, User oldValue, User newValue)
+                {
+                    users = serverConnection.getUser();
+                    int i = lwUsers.getSelectionModel().getSelectedIndex();
+                    User temp = users.get(i);
+                    message = (char) 222 + "";
+                    taInfo.setText("Username: " + temp.getName() + "\n" + "Password: " + temp.getPassword() + "\n" + "Port: " + temp.getPort() + "\n" + "Ipadress: " + temp.getHostname() + "\n" +
+
+                            "Status: " + temp.getStatusString());
+                }
+            });
+        } catch(Exception e){
+//            System.out.println();
+        }
     }
 
     @Override
