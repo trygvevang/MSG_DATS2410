@@ -51,7 +51,7 @@ public class ServerController implements Initializable, ServerInterface
         try{
         lwUsers.setItems(oUsers);
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            //
         }
         showUInfo();
     }
@@ -88,7 +88,7 @@ public class ServerController implements Initializable, ServerInterface
                 }
             });
         } catch(Exception e){
-//            System.out.println();
+            //
         }
     }
 
