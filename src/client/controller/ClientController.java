@@ -406,6 +406,7 @@ public class ClientController implements Initializable, ClientInterface
     public void setYourUsername(String yourUsername)
     {
         this.yourUsername = yourUsername;
+        handleUpdateList();
     }
 
     public String getYourUsername()
