@@ -9,16 +9,17 @@ This is a group project by students attending HiOA - HINGDATA15HA
 
 <br />
 <br />
-<br />
 
 **How to use the program:**
 
 *NOTE: The server needs too be launched before you try to Sign in or Sign up a new user!*
 
-Server part:
+**Server part:**
+
 First you have to start up ServerMain, this will promt you with the GUI for our server. In the right colomn you will be able to see all registered users. Here you can click on the names and see their username, password, port, IPadress and status, this will appear in the middle column. In the right column you will be able to see every client connected to the server through the socket.
 
-Client part:
+**Client part:**
+
 WHen you start ClientMain you will get a promt that will ask you to enter a IP address, here you need to enter the IP address of the Server you want to connect to. The default value is '127.0.0.1' which is the localhost IP. After you have entered a valid IP address you will be able to choose between signing in or signing up.
 If you are a new user you will need to create a new user, if you press 'Sign up' you will be able to do this. Another window will appear allowing you to type in wanted Username og Password. When you have pressed the Submit button you will be taken to the Client window.
 
