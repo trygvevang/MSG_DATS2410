@@ -4,12 +4,15 @@ import client.model.ClientUser;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
@@ -56,6 +59,20 @@ public class ClientController implements Initializable, ClientInterface
         counter = 0;
         userObservableList = FXCollections.observableArrayList();
         sendMessageTo = "";
+
+        taMsg.setOnKeyPressed(new EventHandler<KeyEvent>()
+        {
+            @Override
+            public void handle(KeyEvent event)
+            {
+                if (event.getCode().equals(KeyCode.ENTER)){
+                    handleSend();
+                    taMsg.setText("");
+                    taMsg.positionCaret(0);
+                }
+            }
+        });
+
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Message Application - Client");
@@ -244,7 +261,7 @@ public class ClientController implements Initializable, ClientInterface
         {
             setMessage(getSendMessageTo() + (char) 209 + getYourUsername() + ": " + taMsg.getText());
             taConv.appendText(getYourUsername() + ": " + taMsg.getText() + "\n");
-            taMsg.clear();
+            taMsg.setText("");
         }
         else
         {
@@ -308,7 +325,7 @@ public class ClientController implements Initializable, ClientInterface
             if (result.isPresent()) {
                 setSendMessageTo((char) 209 + result.get());
                 System.out.println("Your choice: " + result.get());
-                taConv.appendText("You connected with: " + result.get());
+                taConv.appendText("You connected with: " + result.get() + "\n");
             }
         }
 
