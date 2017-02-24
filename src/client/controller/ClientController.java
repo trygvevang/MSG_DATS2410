@@ -46,6 +46,16 @@ public class ClientController implements Initializable, ClientInterface
     private String yourUsername; // Your username
     private String sendMessageTo; // Username for the person you are chatting with
 
+
+    /**
+     * Instantiated when the client program is launched. Sets every value needed in the beginning.
+     * Creates a popup where the user types in what IP the server is running on.
+     * If not specified the IP will be localhost: 127.0.0.1
+     * Creates another popup for the user to choose between signing in, signing up or close the program.
+     * Handles the login and the registering in these popup
+     * @param location of the GUI file path
+     * @param resources not used in this program, inherited from Initializable
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
@@ -90,12 +100,6 @@ public class ClientController implements Initializable, ClientInterface
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == buttonTypeOne)
         {
-            /*
-            connect
-            if login credentials = true
-                logge inn og sett status og lukk alertbox
-             */
-            //New AlertBox for signing in
 
             Dialog<Pair<String, String>> dialog = new Dialog<>();
             dialog.setTitle("Sign in");
@@ -257,12 +261,23 @@ public class ClientController implements Initializable, ClientInterface
         }
     }
 
+    /**
+     * Instantiates a ClientThread and starts it. This tries to create a connection.
+     * If it cannot connect to the server a prompt will appear and inform the user.
+     * @param host Host IP to connect to
+     * @param port Port to connect to
+     */
     private void estConnection(String host, int port)
     {
         ct = new ClientThread(host, port, this);
         ct.start();
     }
 
+    /**
+     * Only allows the user to send a message when in a chat.
+     * If this is not the case, a prompt will appear and this tells the user
+     * what to do.
+     */
     public void handleSend()
     {
 
@@ -284,7 +299,12 @@ public class ClientController implements Initializable, ClientInterface
         }
     }
 
-    //File -> Log out
+    /**
+     * Handles when the user wants to log out from the client.
+     * Checks if the user is in a chat and if so sleeps so the server can react to this.
+     * When setMessage is set to null the client knows it is time to shut down the connection
+     * to the server.
+     */
     public void handleLogout()
     {
         if (!sendMessageTo.equals("")){
@@ -299,7 +319,14 @@ public class ClientController implements Initializable, ClientInterface
 
     }
 
-    //File -> Connect
+    /**
+     * Called when pressed "File - Connect with" in the menubar in the GUI of the client.
+     * Uses the character 223 to ask the server for an updated list of the users and their status.
+     * Then sleeps for 200 milliseconds to give the server time to send back the updated list.
+     * Updates the user list and takes out the user logged in from this client.
+     * Creates a pop up so the user can choose who to connect with.
+     * Only allows connection with a user with status "Online", not "Offline" or "Busy"
+     */
     public void requestChat()
     {
         taConv.setText("");
@@ -339,37 +366,59 @@ public class ClientController implements Initializable, ClientInterface
 
     }
 
-    //File -> Update list
+    /**
+     * Requests an updated list of the users and their status by using
+     * the character 223.
+     */
     public void handleUpdateList()
     {
         setMessage((char) 223 + "");
     }
 
+    /**
+     * Disconnects the user from the current chat if the user were in a chat with someone.
+     */
     public void handleDisconnectChat()
     {
+        if (!sendMessageTo.equals("")){
         setMessage((char) 210 + getSendMessageTo() + (char) 209 + getYourUsername());
         setSendMessageTo("");
         taConv.appendText("You have left the chat\n");
+        }
     }
 
+    /**
+     * @return current message
+     */
     @Override
     public String getMessage()
     {
         return message;
     }
 
+    /**
+     * @param message sets the message to the parameter
+     */
     @Override
     public void setMessage(String message)
     {
         this.message = message;
     }
 
+    /**
+     * Sets validLogin to true
+     */
     @Override
     public void setValidLogin()
     {
         validLogin = true;
     }
 
+    /**
+     * Creates an ObservableList of the users that are in the database of the server.
+     * @param token the list of users and their status in String format.
+     * @return the ObservableList used in the GUI
+     */
     private ObservableList<ClientUser> createUserList(String token)
     {
         String[] usersString = token.split((char) 208 + "");
@@ -389,6 +438,10 @@ public class ClientController implements Initializable, ClientInterface
         return userObservableList;
     }
 
+    /**
+     *
+     * @param token
+     */
     @Override
     public void setUserList(String token)
     {
@@ -397,6 +450,10 @@ public class ClientController implements Initializable, ClientInterface
         twStatus.setCellValueFactory(new PropertyValueFactory("statusString"));
     }
 
+    /**
+     * Prints the received message from another user or the server to the TextArea.
+     * @param s received message to print
+     */
     @Override
     public void printMessage(String s)
     {
@@ -415,6 +472,9 @@ public class ClientController implements Initializable, ClientInterface
         }
     }
 
+    /*
+     * Private getters and setters used only in this class
+     */
     private void setSendMessageTo(String sendMessageTo)
     {
         this.sendMessageTo = sendMessageTo;

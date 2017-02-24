@@ -92,6 +92,10 @@ public class ServerController implements Initializable, ServerInterface
         }
     }
 
+    /**
+     * Called from ServerConnection.
+     * Used to know when to update the list of users in the GUI in the server.
+     */
     @Override
     public void updateUserListServer()
     {
