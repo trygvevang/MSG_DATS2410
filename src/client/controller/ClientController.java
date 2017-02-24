@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 import static java.lang.Thread.sleep;
 
@@ -48,22 +49,31 @@ public class ClientController implements Initializable, ClientInterface
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        host = "127.0.0.1";
+        host = "";
         port = 6789;
-        message = "Start";
         validLogin = false;
         counter = 0;
         userObservableList = FXCollections.observableArrayList();
         sendMessageTo = "";
+        twBrukerID.setSortable(false);
+        twStatus.setSortable(false);
 
-        taMsg.setOnKeyPressed(event ->
+        final Pattern IPPATTERN = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}" +
+                "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
+
+        // Ip selection
+        TextInputDialog ipdialog = new TextInputDialog("127.0.0.1");
+        ipdialog.setTitle("IP address of the server");
+        ipdialog.setHeaderText("What IP address do the server have?");
+        ipdialog.setContentText(null);
+
+        Optional<String> ipResult = ipdialog.showAndWait();
+        if (ipResult.isPresent() && IPPATTERN.matcher(ipResult.get()).matches())
         {
-            if (event.getCode().equals(KeyCode.ENTER)){
-                handleSend();
-                taMsg.setText("");
-                taMsg.positionCaret(0);
-            }
-        });
+            host = ipResult.get();
+        }
+        else
+            System.exit(0);
 
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -73,13 +83,20 @@ public class ClientController implements Initializable, ClientInterface
 
         ButtonType buttonTypeOne = new ButtonType("Sign in");
         ButtonType buttonTypeTwo = new ButtonType("Sign up");
-        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType buttonTypeCancel2 = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel);
+        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel2);
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == buttonTypeOne)
         {
+            /*
+            connect
+            if login credentials = true
+                logge inn og sett status og lukk alertbox
+             */
+            //New AlertBox for signing in
+
             Dialog<Pair<String, String>> dialog = new Dialog<>();
             dialog.setTitle("Sign in");
             dialog.setHeaderText("Sign in:");
@@ -110,7 +127,9 @@ public class ClientController implements Initializable, ClientInterface
 
             // Do some validation (using the Java 8 lambda syntax).
             username.textProperty().addListener((observable, oldValue, newValue) ->
-                    loginButton.setDisable(newValue.trim().isEmpty()));
+            {
+                loginButton.setDisable(newValue.trim().isEmpty());
+            });
 
             dialog.getDialogPane().setContent(grid);
 
@@ -149,7 +168,7 @@ public class ClientController implements Initializable, ClientInterface
                     { //counter for how long the while-loop should wait for an answer from server
                         try{
                             sleep(200);
-                        counter++;
+                            counter++;
                         } catch (Exception e){
                             System.out.println(e.getMessage());
                         }
@@ -199,7 +218,9 @@ public class ClientController implements Initializable, ClientInterface
 
             // Do some validation (using the Java 8 lambda syntax).
             username.textProperty().addListener((observable, oldValue, newValue) ->
-                    registerButton.setDisable(newValue.trim().isEmpty()));
+            {
+                registerButton.setDisable(newValue.trim().isEmpty());
+            });
 
             dialog.getDialogPane().setContent(grid);
 
