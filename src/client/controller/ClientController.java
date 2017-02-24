@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
@@ -40,7 +41,6 @@ public class ClientController implements Initializable, ClientInterface
     private int port;
     private String message;
     private boolean validLogin;
-    private String searcher;
     private int counter;
     private ObservableList<ClientUser> userObservableList;
     private String yourUsername; // Your username
@@ -52,7 +52,6 @@ public class ClientController implements Initializable, ClientInterface
         host = "";
         port = 6789;
         validLogin = false;
-        searcher = "search";
         counter = 0;
         userObservableList = FXCollections.observableArrayList();
         sendMessageTo = "";
@@ -159,19 +158,28 @@ public class ClientController implements Initializable, ClientInterface
                         .getValue());
                 setMessage((char) 169 + uname + (char) 169 + usernamePassword.getValue());
                 estConnection(host, port);
-                while (searcher != null)
+                while (true)
                 {
                     if (validLogin)
                     {
                         setYourUsername(uname);
                         return;
-                    } else if (counter < 100_000)
+                    } else if (counter < 5)
                     { //counter for how long the while-loop should wait for an answer from server
-                        counter++;
-                        System.out.println(counter);
+                        try{
+                            sleep(200);
+                            counter++;
+                        } catch (Exception e){
+                            System.out.println(e.getMessage());
+                        }
                     }
                     else
                     {
+                        Alert failedLogin = new Alert(Alert.AlertType.ERROR);
+                        failedLogin.setTitle("Error");
+                        failedLogin.setHeaderText("Failed login");
+                        failedLogin.setContentText("Wrong username and password combination or\nuser already in use/online.\nPlease restart the client to try again.");
+                        failedLogin.showAndWait();
                         System.exit(0);
                     }
                 }
@@ -262,7 +270,7 @@ public class ClientController implements Initializable, ClientInterface
         {
             setMessage(getSendMessageTo() + (char) 209 + getYourUsername() + ": " + taMsg.getText());
             taConv.appendText(getYourUsername() + ": " + taMsg.getText() + "\n");
-            taMsg.clear();
+            taMsg.setText("");
         }
         else
         {
@@ -279,7 +287,16 @@ public class ClientController implements Initializable, ClientInterface
     //File -> Log out
     public void handleLogout()
     {
+        if (!sendMessageTo.equals("")){
+            handleDisconnectChat();
+            try{
+                sleep(400);
+            }catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
         setMessage(null);
+
     }
 
     //File -> Connect
@@ -295,16 +312,15 @@ public class ClientController implements Initializable, ClientInterface
         {
             System.err.println(e.getMessage());
         }
-        String username = "";
-        int t = twUser.getSelectionModel().getFocusedIndex();
+        String username;
         System.out.println();
-        List<String> onlineUsers = new ArrayList<String>();
+        List<String> onlineUsers = new ArrayList<>();
         for (ClientUser user : userObservableList) {
             if (user.getStatus() == 1) onlineUsers.add(user.getName());
         }
 
         if (onlineUsers.size() > 0) {
-            ChoiceDialog<String> cdialog = new ChoiceDialog<String>(onlineUsers.get(0), onlineUsers);
+            ChoiceDialog<String> cdialog = new ChoiceDialog<>(onlineUsers.get(0), onlineUsers);
             cdialog.setTitle("Users online");
             cdialog.setHeaderText(null);
             cdialog.setContentText("Choose user to connect");
@@ -317,7 +333,7 @@ public class ClientController implements Initializable, ClientInterface
             if (result.isPresent()) {
                 setSendMessageTo((char) 209 + result.get());
                 System.out.println("Your choice: " + result.get());
-                taConv.appendText("You connected with: " + result.get());
+                taConv.appendText("You connected with: " + result.get() + "\n");
             }
         }
 
@@ -349,28 +365,22 @@ public class ClientController implements Initializable, ClientInterface
     }
 
     @Override
-    public void setValidLogin(boolean value)
+    public void setValidLogin()
     {
-        validLogin = value;
+        validLogin = true;
     }
 
-    @Override
-    public void setSearcher(String str)
-    {
-        searcher = str;
-    }
-
-    public ObservableList<ClientUser> createUserList(String token)
+    private ObservableList<ClientUser> createUserList(String token)
     {
         String[] usersString = token.split((char) 208 + "");
 
         userObservableList = FXCollections.observableArrayList();
 
-        for (int i = 0; i < usersString.length; i++)
+        for (String anUsersString : usersString)
         {
-            int delimiterIndex = usersString[i].indexOf(182);
-            String name = usersString[i].substring(0, delimiterIndex);
-            String status = usersString[i].substring(delimiterIndex + 1);
+            int delimiterIndex = anUsersString.indexOf(182);
+            String name = anUsersString.substring(0, delimiterIndex);
+            String status = anUsersString.substring(delimiterIndex + 1);
             if (!name.equals(yourUsername))
             {
                 userObservableList.add(new ClientUser(name, status));
@@ -405,31 +415,23 @@ public class ClientController implements Initializable, ClientInterface
         }
     }
 
-    @Override
-    public void printServerMessage(String s)
-    {
-        if (s != null && !s.equals("null") && s.length() > 0){
-            taConv.appendText(s);
-        }
-    }
-
-    public void setSendMessageTo(String sendMessageTo)
+    private void setSendMessageTo(String sendMessageTo)
     {
         this.sendMessageTo = sendMessageTo;
     }
 
-    public String getSendMessageTo()
+    private String getSendMessageTo()
     {
         return sendMessageTo;
     }
 
-    public void setYourUsername(String yourUsername)
+    private void setYourUsername(String yourUsername)
     {
         this.yourUsername = yourUsername;
         handleUpdateList();
     }
 
-    public String getYourUsername()
+    private String getYourUsername()
     {
         return yourUsername;
     }

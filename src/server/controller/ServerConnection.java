@@ -1,6 +1,5 @@
 package server.controller;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.concurrent.Service;
@@ -16,7 +15,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -79,7 +77,6 @@ public class ServerConnection extends Task<Void>
 
     private void addPersonalMessage(String username, String msg)
     {
-        System.out.println(msg + " : addPersonalMessage");
         ConcurrentLinkedQueue<String> correctQueue;
         if (userChatQueues.get(username) == null){
             correctQueue = new ConcurrentLinkedQueue<>();
@@ -94,10 +91,8 @@ public class ServerConnection extends Task<Void>
     {
         ConcurrentLinkedQueue<String> userQueue = userChatQueues.get(username);
         if (userQueue != null && userQueue.size() != 0) {
-            System.out.println("Pulls message: " + userQueue.peek());
             return userQueue.poll();
         }
-//        System.out.println("fant ingen melding");
         return null;
     }
 
@@ -113,7 +108,6 @@ public class ServerConnection extends Task<Void>
     public void updateUserConnection(String username, String host, int port, int status)
     {
         host = host.substring(1);
-        System.out.println(username + " : " + host + " : " + port + " : " + status);
         for (User user : users)
         {
             if (username.equals(user.getName())){
@@ -150,13 +144,11 @@ public class ServerConnection extends Task<Void>
     {
 
         Socket socket;
-        private String cAddr;
         ServerConnection connection;
 
-        public ClientService(Socket socket, ServerConnection connection)
+        ClientService(Socket socket, ServerConnection connection)
         {
             this.socket = socket;
-            cAddr = socket.getInetAddress().getHostAddress();
             this.connection = connection;
         }
 
@@ -181,7 +173,6 @@ public class ServerConnection extends Task<Void>
                 String input;
                 while (!(input = in.readLine()).equals("EXIT")) // TODO: Change condition to some type of logout
                 {
-//                    sleep(1000);
                     switch (input.charAt(0))
                     {
                         case ((char) 182) : // ¶
@@ -192,7 +183,6 @@ public class ServerConnection extends Task<Void>
                             username = input.split((char) 182 + "")[1];
                             connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
                             out.println(connection.sendUserList());
-                            System.out.println("Registrerer ny bruker: " + input);
                             break;
                         }
                         case ((char) 169) : // ©
@@ -202,7 +192,6 @@ public class ServerConnection extends Task<Void>
                             String s = connection.loginUser(input);
                             if (s.equals("true")){
                                 username = input.split((char) 169 + "")[1];
-                                System.out.println(socket.getInetAddress().toString() + " : " + socket.getPort());
                                 connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
                                 out.println(s + (char) 169 + connection.sendUserList());
                             }
@@ -213,10 +202,8 @@ public class ServerConnection extends Task<Void>
 //                            connection.requestChat(input.substring(1));
                             //chat request
                             //must handle showUserList()
-                            System.out.println("Connect: " + input);
                             out.println((char)181 + "Connected to user");
                             break;
-                            //System.out.print(in.readLine());
                         }
                         case ((char) 209) : //Gets a normal message from this client
                         {   // 209 USERNAME 209 MESSAGE
@@ -225,14 +212,12 @@ public class ServerConnection extends Task<Void>
                             connection.addPersonalMessage(info[1], info[2]);
                             out.println(connection.sendUserList());
                             break;
-//                           connection.addPersonalMessage(input); //TODO: fix not to send to yourself
                         }
                         case ((char) 210) : //Disconnect from chat
                         {
                             String[] info = input.substring(1).split(String.valueOf((char) 209));
                             connection.addPersonalMessage(info[1], (char) 231 + info[2]);
                             connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
-//                            out.println("Disconnected from current chat.\n");
                             break;
                         }
                         case ((char) 222) : //Logging off
@@ -242,16 +227,10 @@ public class ServerConnection extends Task<Void>
                             out.println(connection.sendUserList());
                             break;
                         case ((char) 224) :
-//                            System.out.println("Ber om nyeste melding");
                             out.println(connection.getQueueMsg(username));
                             break;
                         case ((char) 199) :
-//                            System.out.println("received disc and trying to disc self:     " + input);
-//                            String[] info = input.split(String.valueOf((char) 209));
-//                            System.out.println(info[1] + " : " + info[2] + " : " + " |||||||||||||||||||||||||||||||");
-//                            connection.addPersonalMessage(info[1] , (char) 199 + info[2]);
                             connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
-//                            out.println("Disconnected from current chat.\n");
                             break;
                         default:
 
