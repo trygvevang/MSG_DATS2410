@@ -145,13 +145,22 @@ public class ClientController implements Initializable, ClientInterface
                     {
                         setYourUsername(uname);
                         return;
-                    } else if (counter < 100_000)
+                    } else if (counter < 5)
                     { //counter for how long the while-loop should wait for an answer from server
+                        try{
+                            sleep(200);
                         counter++;
-                        System.out.println(counter);
+                        } catch (Exception e){
+                            System.out.println(e.getMessage());
+                        }
                     }
                     else
                     {
+                        Alert failedLogin = new Alert(Alert.AlertType.ERROR);
+                        failedLogin.setTitle("Error");
+                        failedLogin.setHeaderText("Failed login");
+                        failedLogin.setContentText("Wrong username and password combination or\nuser already in use/online.\nPlease restart the client to try again.");
+                        failedLogin.showAndWait();
                         System.exit(0);
                     }
                 }
