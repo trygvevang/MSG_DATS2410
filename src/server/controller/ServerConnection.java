@@ -1,6 +1,5 @@
 package server.controller;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.concurrent.Service;
@@ -16,7 +15,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -146,13 +144,11 @@ public class ServerConnection extends Task<Void>
     {
 
         Socket socket;
-        private String cAddr;
         ServerConnection connection;
 
-        public ClientService(Socket socket, ServerConnection connection)
+        ClientService(Socket socket, ServerConnection connection)
         {
             this.socket = socket;
-            cAddr = socket.getInetAddress().getHostAddress();
             this.connection = connection;
         }
 
@@ -177,7 +173,6 @@ public class ServerConnection extends Task<Void>
                 String input;
                 while (!(input = in.readLine()).equals("EXIT")) // TODO: Change condition to some type of logout
                 {
-//                    sleep(1000);
                     switch (input.charAt(0))
                     {
                         case ((char) 182) : // ¶

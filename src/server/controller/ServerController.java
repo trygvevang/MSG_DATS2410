@@ -15,8 +15,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import static java.lang.Thread.sleep;
-
 /**
  * Controlling all the scenes for the server application.
  */
@@ -25,18 +23,16 @@ public class ServerController implements Initializable, ServerInterface
     @FXML
     TextArea taLog;
     @FXML
-    ListView lwUsers;
+    ListView<User> lwUsers;
     @FXML
     TextArea taInfo;
 
-    ServerConnection serverConnection;
+    private ServerConnection serverConnection;
     private ArrayList<User> users;
-    ObservableList<User> oUsers;
-    private String message;
+    private ObservableList<User> oUsers;
 
     public ServerController()
     {
-        message = "message";
         serverConnection = new ServerConnection(6789, this);
         serverConnection.start();
         users = serverConnection.getUser();
@@ -86,7 +82,6 @@ public class ServerController implements Initializable, ServerInterface
                     users = serverConnection.getUser();
                     int i = lwUsers.getSelectionModel().getSelectedIndex();
                     User temp = users.get(i);
-                    message = (char) 222 + "";
                     taInfo.setText("Username: " + temp.getName() + "\n" + "Password: " + temp.getPassword() + "\n" + "Port: " + temp.getPort() + "\n" + "Ipadress: " + temp.getHostname() + "\n" +
 
                             "Status: " + temp.getStatusString());

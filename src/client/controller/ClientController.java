@@ -4,7 +4,6 @@ import client.model.ClientUser;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -12,7 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
@@ -42,7 +40,6 @@ public class ClientController implements Initializable, ClientInterface
     private int port;
     private String message;
     private boolean validLogin;
-    private String searcher;
     private int counter;
     private ObservableList<ClientUser> userObservableList;
     private String yourUsername; // Your username
@@ -53,23 +50,18 @@ public class ClientController implements Initializable, ClientInterface
     {
         host = "127.0.0.1";
         port = 6789;
-        message = "I'm so fucked";
+        message = "Start";
         validLogin = false;
-        searcher = "search";
         counter = 0;
         userObservableList = FXCollections.observableArrayList();
         sendMessageTo = "";
 
-        taMsg.setOnKeyPressed(new EventHandler<KeyEvent>()
+        taMsg.setOnKeyPressed(event ->
         {
-            @Override
-            public void handle(KeyEvent event)
-            {
-                if (event.getCode().equals(KeyCode.ENTER)){
-                    handleSend();
-                    taMsg.setText("");
-                    taMsg.positionCaret(0);
-                }
+            if (event.getCode().equals(KeyCode.ENTER)){
+                handleSend();
+                taMsg.setText("");
+                taMsg.positionCaret(0);
             }
         });
 
@@ -118,9 +110,7 @@ public class ClientController implements Initializable, ClientInterface
 
             // Do some validation (using the Java 8 lambda syntax).
             username.textProperty().addListener((observable, oldValue, newValue) ->
-            {
-                loginButton.setDisable(newValue.trim().isEmpty());
-            });
+                    loginButton.setDisable(newValue.trim().isEmpty()));
 
             dialog.getDialogPane().setContent(grid);
 
@@ -149,7 +139,7 @@ public class ClientController implements Initializable, ClientInterface
                         .getValue());
                 setMessage((char) 169 + uname + (char) 169 + usernamePassword.getValue());
                 estConnection(host, port);
-                while (searcher != null)
+                while (true)
                 {
                     if (validLogin)
                     {
@@ -209,9 +199,7 @@ public class ClientController implements Initializable, ClientInterface
 
             // Do some validation (using the Java 8 lambda syntax).
             username.textProperty().addListener((observable, oldValue, newValue) ->
-            {
-                registerButton.setDisable(newValue.trim().isEmpty());
-            });
+                    registerButton.setDisable(newValue.trim().isEmpty()));
 
             dialog.getDialogPane().setContent(grid);
 
@@ -303,16 +291,15 @@ public class ClientController implements Initializable, ClientInterface
         {
             System.err.println(e.getMessage());
         }
-        String username = "";
-        int t = twUser.getSelectionModel().getFocusedIndex();
+        String username;
         System.out.println();
-        List<String> onlineUsers = new ArrayList<String>();
+        List<String> onlineUsers = new ArrayList<>();
         for (ClientUser user : userObservableList) {
             if (user.getStatus() == 1) onlineUsers.add(user.getName());
         }
 
         if (onlineUsers.size() > 0) {
-            ChoiceDialog<String> cdialog = new ChoiceDialog<String>(onlineUsers.get(0), onlineUsers);
+            ChoiceDialog<String> cdialog = new ChoiceDialog<>(onlineUsers.get(0), onlineUsers);
             cdialog.setTitle("Users online");
             cdialog.setHeaderText(null);
             cdialog.setContentText("Choose user to connect");
@@ -357,28 +344,22 @@ public class ClientController implements Initializable, ClientInterface
     }
 
     @Override
-    public void setValidLogin(boolean value)
+    public void setValidLogin()
     {
-        validLogin = value;
+        validLogin = true;
     }
 
-    @Override
-    public void setSearcher(String str)
-    {
-        searcher = str;
-    }
-
-    public ObservableList<ClientUser> createUserList(String token)
+    private ObservableList<ClientUser> createUserList(String token)
     {
         String[] usersString = token.split((char) 208 + "");
 
         userObservableList = FXCollections.observableArrayList();
 
-        for (int i = 0; i < usersString.length; i++)
+        for (String anUsersString : usersString)
         {
-            int delimiterIndex = usersString[i].indexOf(182);
-            String name = usersString[i].substring(0, delimiterIndex);
-            String status = usersString[i].substring(delimiterIndex + 1);
+            int delimiterIndex = anUsersString.indexOf(182);
+            String name = anUsersString.substring(0, delimiterIndex);
+            String status = anUsersString.substring(delimiterIndex + 1);
             if (!name.equals(yourUsername))
             {
                 userObservableList.add(new ClientUser(name, status));
@@ -413,30 +394,22 @@ public class ClientController implements Initializable, ClientInterface
         }
     }
 
-    @Override
-    public void printServerMessage(String s)
-    {
-        if (s != null && !s.equals("null") && s.length() > 0){
-            taConv.appendText(s);
-        }
-    }
-
-    public void setSendMessageTo(String sendMessageTo)
+    private void setSendMessageTo(String sendMessageTo)
     {
         this.sendMessageTo = sendMessageTo;
     }
 
-    public String getSendMessageTo()
+    private String getSendMessageTo()
     {
         return sendMessageTo;
     }
 
-    public void setYourUsername(String yourUsername)
+    private void setYourUsername(String yourUsername)
     {
         this.yourUsername = yourUsername;
     }
 
-    public String getYourUsername()
+    private String getYourUsername()
     {
         return yourUsername;
     }

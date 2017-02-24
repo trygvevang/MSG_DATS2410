@@ -13,22 +13,21 @@ import static java.lang.Thread.sleep;
 public class ClientThread extends Task<Void>
 {
     private ClientInterface connection;
-    Socket socket;
-    BufferedReader in;
-    PrintWriter out;
+    private Socket socket;
+    private BufferedReader in;
+    private PrintWriter out;
     private String host;
     private int port;
-    private Thread th;
 
-    public ClientThread(String host, int port, ClientInterface connection)
+    ClientThread(String host, int port, ClientInterface connection)
     {
         this.host = host;
         this.port = port;
         this.connection = connection;
     }
 
-    public void start(){
-        th = new Thread(this);
+    void start(){
+        Thread th = new Thread(this);
         th.start();
     }
 
@@ -57,12 +56,10 @@ public class ClientThread extends Task<Void>
                         out.println(connection.getMessage());
                         String[] tokens = in.readLine().split((char) 169 + "");
                         recieved = tokens[0];
-                        if (recieved.equals("true")){
-                            connection.setValidLogin(true);
+                        if (recieved.equals("true"))
+                        {
+                            connection.setValidLogin();
                             connection.setUserList(tokens[1]);
-                            connection.setSearcher("True");
-                        }else{
-                            connection.setSearcher(null);
                         }
                         connection.setMessage("Finnished logging in");
                         break;

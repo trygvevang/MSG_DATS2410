@@ -14,7 +14,6 @@ public class IOUser
      * Reads from a file, and generates a list of users
      *
      * @return list of users
-     * @throws IOException
      */
     public static ArrayList<User> read()
     {
@@ -42,9 +41,9 @@ public class IOUser
      * Writes user information to the users.txt
      *
      * @param u    the user containing the user information
-     * @throws IOException
+     * @throws IOException if the method could not write to the file
      */
-    public static void write(User u) throws IOException
+    private static void write(User u) throws IOException
     {
         try
                 (
@@ -63,7 +62,6 @@ public class IOUser
      *
      * @param users The list of users known to the server
      * @param info  input from client. Used for creating a new user
-     * @return the user id, so the user know what to log in with
      */
     public static void register(ArrayList<User> users, String info)
     {
@@ -109,9 +107,9 @@ public class IOUser
     {
         String s = "";
         User t;
-        for (int i = 0; i < users.size(); i++)
+        for (User user : users)
         {
-            t = users.get(i);
+            t = user;
             s += t.getName() + (char) 182 + t.getStatus() + (char) 208;
         }
         return s;
