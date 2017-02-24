@@ -10,15 +10,27 @@ import java.net.Socket;
 
 import static java.lang.Thread.sleep;
 
+/**
+ * A thread of the connection between the client and the server. It handles
+ * what the client sends to the server. The controller needs a instance of this class to be
+ * able to connect to the server.
+ * Extends the class Task which enables ClientThread to be instantiated as a Thread
+ */
 public class ClientThread extends Task<Void>
 {
     private ClientInterface connection;
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
-    private String host;
-    private int port;
+    private final String host;
+    private final int port;
 
+    /**
+     * Constructor for the ClientThread.
+     * @param host sets the IP of the host the client wants to connect to.
+     * @param port sets the port of the host the client wants to connect to.
+     * @param connection ClientInterface passed from the ClientController
+     */
     ClientThread(String host, int port, ClientInterface connection)
     {
         this.host = host;
@@ -26,12 +38,25 @@ public class ClientThread extends Task<Void>
         this.connection = connection;
     }
 
+    /**
+     * Creates a Thread of this class and starts it
+     */
     void start(){
         Thread th = new Thread(this);
         th.start();
     }
 
 
+    /**
+     * Called when this thread starts. This is where the connection with the server is.
+     * Handles every task the client wants to do. Creates a socket with the host and port set in the constructor.
+     * Also creates a BufferedReader and a PrintWriter which enables printing and reading to and from the server.
+     * Uses the ClientInterface connection to get tasks from the ClientController.
+     * While the message is not null the connection is valid. If the message is equal to null
+     * the connection to the server ends and the client shuts down.
+     * @return null when finished
+     * @throws Exception if any problems with the server or thread occurs
+     */
     @Override
     protected Void call() throws Exception
     {
