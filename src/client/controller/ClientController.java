@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 import static java.lang.Thread.sleep;
 
@@ -48,9 +49,8 @@ public class ClientController implements Initializable, ClientInterface
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        host = "127.0.0.1";
+        host = "";
         port = 6789;
-        message = "I'm so fucked";
         validLogin = false;
         searcher = "search";
         counter = 0;
@@ -59,6 +59,24 @@ public class ClientController implements Initializable, ClientInterface
         twBrukerID.setSortable(false);
         twStatus.setSortable(false);
 
+        final Pattern IPPATTERN = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}" +
+                                                                         "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
+
+        // Ip selection
+        TextInputDialog ipdialog = new TextInputDialog("127.0.0.1");
+        ipdialog.setTitle("IP address of the server");
+        ipdialog.setHeaderText("What IP address do the server have?");
+        ipdialog.setContentText(null);
+
+        Optional<String> ipResult = ipdialog.showAndWait();
+        if (ipResult.isPresent() && IPPATTERN.matcher(ipResult.get()).matches())
+        {
+            host = ipResult.get();
+        }
+        else
+            System.exit(0);
+
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Message Application - Client");
         alert.setHeaderText("Sign in or sign up");
@@ -66,9 +84,9 @@ public class ClientController implements Initializable, ClientInterface
 
         ButtonType buttonTypeOne = new ButtonType("Sign in");
         ButtonType buttonTypeTwo = new ButtonType("Sign up");
-        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType buttonTypeCancel2 = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel);
+        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel2);
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == buttonTypeOne)
