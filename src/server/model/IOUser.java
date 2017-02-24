@@ -13,19 +13,18 @@ public class IOUser
     /**
      * Reads from a file, and generates a list of users
      *
-     * @param path path of the file
      * @return list of users
      * @throws IOException
      */
-    public static List<User> read(String path) throws IOException
+    public static ArrayList<User> read()
     {
-        List<User> users = new ArrayList<>();
+        ArrayList<User> users = new ArrayList<>();
         String reg = (char) 182 + "";
         String[] parts;
 
         try
                 (
-                        BufferedReader in = new BufferedReader(new FileReader(new File(path)))
+                        BufferedReader in = new BufferedReader(new FileReader(new File("src/server/resources/users.txt")))
                 )
         {
             for (String l = in.readLine(); l != null; l = in.readLine())
@@ -33,6 +32,8 @@ public class IOUser
                 parts = l.split(reg);
                 users.add(new User(parts[1], parts[2]));
             }
+        }catch (IOException e) {
+            System.err.println(e.getMessage());
         }
         return users;
     }
@@ -40,15 +41,14 @@ public class IOUser
     /**
      * Writes user information to the users.txt
      *
-     * @param path path of the file users.txt
      * @param u    the user containing the user information
      * @throws IOException
      */
-    public static void write(String path, User u) throws IOException
+    public static void write(User u) throws IOException
     {
         try
                 (
-                        FileWriter fileWriterw = new FileWriter(path, true);
+                        FileWriter fileWriterw = new FileWriter("src/server/resources/users.txt", true);
                         BufferedWriter bufferedWriter = new BufferedWriter(fileWriterw);
                         PrintWriter out = new PrintWriter(bufferedWriter)
                 )
@@ -65,7 +65,7 @@ public class IOUser
      * @param info  input from client. Used for creating a new user
      * @return the user id, so the user know what to log in with
      */
-    public static boolean register(List<User> users, String info)
+    public static void register(ArrayList<User> users, String info)
     {
         String[] tokens = info.split((char) 182 + "");
 
@@ -74,13 +74,11 @@ public class IOUser
 
         try
         {
-            IOUser.write("src/server/resources/users.txt", tmp);
+            IOUser.write(tmp);
         } catch (IOException e)
         {
             System.err.println("I/O Exception: " + e.getMessage());
-            return false;
         }
-        return true;
     }
 
     /**
@@ -107,7 +105,7 @@ public class IOUser
         return "false";
     }
 
-    public static String getUserList(List<User> users)
+    public static String getUserList(ArrayList<User> users)
     {
         String s = "";
         User t;

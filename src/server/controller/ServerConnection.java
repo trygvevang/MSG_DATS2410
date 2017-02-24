@@ -1,10 +1,11 @@
 package server.controller;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import jdk.nashorn.internal.ir.Block;
+import server.model.IOUser;
 import server.model.User;
 
 import java.io.BufferedReader;
@@ -14,13 +15,9 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import static java.lang.Thread.sleep;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Multi client server.
@@ -29,14 +26,19 @@ public class ServerConnection extends Task<Void>
 {
 
     private ObservableMap<String, String> clientMessageMap = FXCollections.observableMap(new HashMap<>());
-    private List<User> users;
+    private ArrayList<User> users;
     private int port;
-    private ServerInterface connection;
+    private HashMap<String, ConcurrentLinkedQueue<String>> userChatQueues;
+    private ServerInterface serverInterface;
 
-    public ServerConnection(int port, ServerInterface connection)
+
+    public ServerConnection(int port, ServerInterface serverInterface)
     {
-        this.connection = connection;
+        userChatQueues = new HashMap<>();
+        users = IOUser.read();
+        this.serverInterface = serverInterface;
         this.port = port;
+
     }
 
     @Override
@@ -48,7 +50,7 @@ public class ServerConnection extends Task<Void>
             {
                 Socket sock = serverSocket.accept();
 
-                ClientService cs = new ClientService(sock, this.connection);
+                ClientService cs = new ClientService(sock, this);
                 String client = sock.getInetAddress().getHostAddress() + ":" + sock.getPort();
 
                 cs.messageProperty().addListener((obs, oldMessage, newMessage) ->
@@ -75,29 +77,87 @@ public class ServerConnection extends Task<Void>
         return null;
     }
 
+    private void addPersonalMessage(String username, String msg)
+    {
+        System.out.println(msg + " : addPersonalMessage");
+        ConcurrentLinkedQueue<String> correctQueue;
+        if (userChatQueues.get(username) == null){
+            correctQueue = new ConcurrentLinkedQueue<>();
+            userChatQueues.put(username, correctQueue);
+        }else {
+            correctQueue = userChatQueues.get(username);
+        }
+        correctQueue.add(msg);
+    }
+
+    private String getQueueMsg(String username)
+    {
+        ConcurrentLinkedQueue<String> userQueue = userChatQueues.get(username);
+        if (userQueue != null && userQueue.size() != 0) {
+            System.out.println("Pulls message: " + userQueue.peek());
+            return userQueue.poll();
+        }
+//        System.out.println("fant ingen melding");
+        return null;
+    }
+
+    ArrayList<User> getUser(){
+        return users;
+    }
+
+    ObservableMap<String, String> getClientMessageMap()
+    {
+        return clientMessageMap;
+    }
+
+    public void updateUserConnection(String username, String host, int port, int status)
+    {
+        host = host.substring(1);
+        System.out.println(username + " : " + host + " : " + port + " : " + status);
+        for (User user : users)
+        {
+            if (username.equals(user.getName())){
+                user.setSocketInfo(host, port, status);
+                break;
+            }
+        }
+        serverInterface.updateUserListServer();
+    }
+
+    private String sendUserList()
+    {
+        return IOUser.getUserList(users);
+    }
+
+    private void registerUser(String input){
+        IOUser.register(users, input);
+    }
+
+    private String loginUser(String input)
+    {
+        return IOUser.logIn(users, input);
+    }
+
     public void start()
     {
         Thread th = new Thread(this);
         th.start();
     }
 
-    public ObservableMap<String, String> getClientMessageMap()
-    {
-        return clientMessageMap;
-    }
+
 
     private static class ClientService extends Service<Void>
     {
 
         Socket socket;
         private String cAddr;
-        private ServerInterface connection;
+        ServerConnection connection;
 
-        public ClientService(Socket socket, ServerInterface connection)
+        public ClientService(Socket socket, ServerConnection connection)
         {
-            this.connection = connection;
             this.socket = socket;
             cAddr = socket.getInetAddress().getHostAddress();
+            this.connection = connection;
         }
 
         @Override
@@ -149,7 +209,7 @@ public class ServerConnection extends Task<Void>
                         }
                         case ((char) 181) : //µ
                         {
-                            connection.requestChat(input.substring(1));
+//                            connection.requestChat(input.substring(1));
                             //chat request
                             //must handle showUserList()
                             System.out.println("Connect: " + input);
