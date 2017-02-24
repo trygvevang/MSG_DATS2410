@@ -17,16 +17,6 @@
                         <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Log out" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                    </items>
-                </Menu>
             </menus>
         </MenuBar>
         <TextArea fx:id="taMsg" layoutY="490.0" prefHeight="86.0" prefWidth="549.0" wrapText="true" />
