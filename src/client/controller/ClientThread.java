@@ -77,7 +77,7 @@ public class ClientThread extends Task<Void>
 
                     case ((char) 210) :
                         out.println(connection.getMessage());
-                        connection.printServerMessage(in.readLine());
+//                        connection.printServerMessage(in.readLine());
                         connection.setMessage("Disconnected from chat.");
                         break;
 
@@ -91,8 +91,9 @@ public class ClientThread extends Task<Void>
                         System.out.println("Client thread 199:    " + connection.getMessage());
                         out.println(connection.getMessage());
                         connection.setMessage("Sent disconnect");
+                        break;
                     default :
-//                        System.out.println("Default here");
+                        System.out.println("Default here");
                         out.println((char) 224);
                         connection.printMessage(in.readLine());
                         break;
