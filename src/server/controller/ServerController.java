@@ -52,7 +52,7 @@ public class ServerController implements Initializable, ServerInterface
         try{
         lwUsers.setItems(oUsers);
         } catch (Exception e){
-//            System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
         }
         showUInfo();
     }

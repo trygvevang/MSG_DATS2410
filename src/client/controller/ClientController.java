@@ -71,13 +71,6 @@ public class ClientController implements Initializable, ClientInterface
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == buttonTypeOne)
         {
-            /*
-            connect
-            if login credentials = true
-                logge inn og sett status og lukk alertbox
-             */
-            //New AlertBox for signing in
-
             Dialog<Pair<String, String>> dialog = new Dialog<>();
             dialog.setTitle("Sign in");
             dialog.setHeaderText("Sign in:");
@@ -268,7 +261,16 @@ public class ClientController implements Initializable, ClientInterface
     //File -> Log out
     public void handleLogout()
     {
+        if (!sendMessageTo.equals("")){
+            handleDisconnectChat();
+            try{
+                sleep(400);
+            }catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
         setMessage(null);
+
     }
 
     //File -> Connect
