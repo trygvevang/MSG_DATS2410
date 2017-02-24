@@ -265,6 +265,8 @@ public class ClientController implements Initializable, ClientInterface
     //File -> Connect
     public void requestChat()
     {
+        taConv.setText("");
+
         setMessage((char) 223 + "");
         try
         {
@@ -295,6 +297,7 @@ public class ClientController implements Initializable, ClientInterface
             if (result.isPresent()) {
                 setSendMessageTo((char) 209 + result.get());
                 System.out.println("Your choice: " + result.get());
+                taConv.appendText("You connected with: " + result.get());
             }
         }
 
@@ -310,6 +313,7 @@ public class ClientController implements Initializable, ClientInterface
     {
         setMessage((char) 210 + getSendMessageTo() + (char) 209 + getYourUsername());
         setSendMessageTo("");
+        taConv.appendText("You have left the chat\n");
     }
 
     @Override
@@ -369,12 +373,10 @@ public class ClientController implements Initializable, ClientInterface
         if (s != null && !s.equals("null") && s.length() > 0)
         {
             System.out.println("Print message: " + s);
-            if (s.charAt(0) == (char) 231){
-                System.out.println("Asked to disconnect: " + s);
-                setMessage((char) 199 + "" + (char) 209 + "" + getYourUsername() + (char) 209 + getYourUsername());
-            }else if (s.charAt(0) == (char) 199){
-                System.out.println("Disconnected");
-                setMessage("Disconnected");
+            if (s.charAt(0) == (char) 231)
+            {
+                taConv.appendText(s.substring(1) + " left the chat.\n");
+                setMessage((char) 199 + "");
                 setSendMessageTo("");
             }else{
             setSendMessageTo((char) 209 + s.split(":")[0]);

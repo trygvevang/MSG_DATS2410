@@ -49,7 +49,11 @@ public class ServerController implements Initializable, ServerInterface
     private void updateShowedList()
     {
         oUsers = FXCollections.observableArrayList(serverConnection.getUser());
+        try{
         lwUsers.setItems(oUsers);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
         showUInfo();
     }
 
@@ -69,11 +73,13 @@ public class ServerController implements Initializable, ServerInterface
 
     private void showUInfo()
     {
+
         lwUsers.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<User>()
         {
             @Override
             public void changed(ObservableValue<? extends User> observable, User oldValue, User newValue)
             {
+                users = serverConnection.getUser();
                 int i = lwUsers.getSelectionModel().getSelectedIndex();
                 User temp = users.get(i);
                 message = (char) 222 + "";
