@@ -10,7 +10,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
@@ -23,6 +22,9 @@ import java.util.regex.Pattern;
 
 import static java.lang.Thread.sleep;
 
+/**
+ * Controls the client stage, and handel the interaction between frontend and backend.
+ */
 public class ClientController implements Initializable, ClientInterface
 {
     @FXML
@@ -50,7 +52,8 @@ public class ClientController implements Initializable, ClientInterface
     /**
      * Instantiated when the client program is launched. Sets every value needed in the beginning.
      * Creates a popup where the user types in what IP the server is running on.
-     * If not specified the IP will be localhost: 127.0.0.1
+     * As a standard the popup shows a loopback IP (127.0.0.1). If user press cancel instead of assigning a host address,
+     * the application will exit.
      * Creates another popup for the user to choose between signing in, signing up or close the program.
      * Handles the login and the registering in these popup
      * @param location of the GUI file path
@@ -252,7 +255,8 @@ public class ClientController implements Initializable, ClientInterface
                 estConnection(host, port);
                 System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword
                         .getValue());
-                setMessage((char) 182 + usernamePassword.getKey() + (char) 182 + usernamePassword.getValue());
+                setYourUsername(usernamePassword.getKey());
+                setMessage((char) 182 + getYourUsername() + (char) 182 + usernamePassword.getValue());
             });
         } else
         {
@@ -262,9 +266,9 @@ public class ClientController implements Initializable, ClientInterface
     }
 
     /**
-     * Instantiates a ClientThread and starts it. This tries to create a connection.
+     * Instantiates a ClientThread and starts it. This tries to create a connection to the server.
      * If it cannot connect to the server a prompt will appear and inform the user.
-     * @param host Host IP to connect to
+     * @param host Host IP address to connect to
      * @param port Port to connect to
      */
     private void estConnection(String host, int port)
@@ -274,9 +278,8 @@ public class ClientController implements Initializable, ClientInterface
     }
 
     /**
-     * Only allows the user to send a message when in a chat.
-     * If this is not the case, a prompt will appear and this tells the user
-     * what to do.
+     * Allows the user to send a message when in an active chat with another user.
+     * If this is not the case, a prompt will appear and this tells the user what to do.
      */
     public void handleSend()
     {
@@ -293,7 +296,7 @@ public class ClientController implements Initializable, ClientInterface
 
             dialog.setTitle("Not the right use");
             dialog.setHeaderText(null);
-            dialog.setContentText("Please select a user with a status of 1 and connect with that user\nbefore you can send a message");
+            dialog.setContentText("Please select a user with a status of \"online\" and \nconnect with that user before you can send a message.");
 
             dialog.showAndWait();
         }
@@ -321,8 +324,8 @@ public class ClientController implements Initializable, ClientInterface
 
     /**
      * Called when pressed "File - Connect with" in the menubar in the GUI of the client.
-     * Uses the character 223 to ask the server for an updated list of the users and their status.
-     * Then sleeps for 200 milliseconds to give the server time to send back the updated list.
+     * Uses the character 223 to ask the server for an updated list of the users with their status.
+     * After this, this thread sleeps for 200 milliseconds to give the server time to send back the updated list.
      * Updates the user list and takes out the user logged in from this client.
      * Creates a pop up so the user can choose who to connect with.
      * Only allows connection with a user with status "Online", not "Offline" or "Busy"
@@ -376,7 +379,7 @@ public class ClientController implements Initializable, ClientInterface
     }
 
     /**
-     * Disconnects the user from the current chat if the user were in a chat with someone.
+     * If in an active chat with another user, this method disconnects this user from the chat.
      */
     public void handleDisconnectChat()
     {
@@ -388,6 +391,7 @@ public class ClientController implements Initializable, ClientInterface
     }
 
     /**
+     * Used by ClientThread to speak with the server.
      * @return current message
      */
     @Override
@@ -397,6 +401,7 @@ public class ClientController implements Initializable, ClientInterface
     }
 
     /**
+     * Used to know what information to send or request from the server.
      * @param message sets the message to the parameter
      */
     @Override
@@ -439,8 +444,8 @@ public class ClientController implements Initializable, ClientInterface
     }
 
     /**
-     *
-     * @param token
+     * Commutes users along with their status to the GUI.
+     * @param token User list in the format of a String
      */
     @Override
     public void setUserList(String token)

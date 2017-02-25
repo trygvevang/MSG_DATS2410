@@ -1,5 +1,8 @@
 package client.model;
 
+/**
+ * This class describes users, along with relevant information about them.
+ */
 public class ClientUser
 {
     private final String name;
@@ -31,12 +34,6 @@ public class ClientUser
     public int getStatus()
     {
         return status;
-    }
-
-    public void setStatus(int status)
-    {
-        this.status = status;
-        statusString = getStatusString();
     }
 
     /**

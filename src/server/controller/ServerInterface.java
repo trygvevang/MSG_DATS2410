@@ -1,5 +1,8 @@
 package server.controller;
 
+/**
+ * This interface is used to communicate between the JavaFX thread and the ServerConnection thread.
+ */
 public interface ServerInterface
 {
     /**

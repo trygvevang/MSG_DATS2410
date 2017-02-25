@@ -57,7 +57,7 @@ public class IOUser
     }
 
     /**
-     * Registers a new user in the system. This function updates both, the list of users and
+     * Registers a new user in the system. This function updates both the list of users and
      * the text file where the users are stored between sessions.
      *
      * @param users The list of users known to the server
@@ -84,10 +84,10 @@ public class IOUser
      *
      * @param users List of users, to make the checking faster
      * @param input from the client to the server
-     * @return either Accepted or Decliend, basically true or false
+     * @return true if the password-attempt and user ID attempt corresponds to a user from the given list, else false.
      */
     public static String logIn(List<User> users, String input)
-    { //TODO: Fix IP and port
+    {
         String[] info = input.split((char) 169 + "");
         String username = info[1];
         String passwordAttempt = info[2];
@@ -114,9 +114,5 @@ public class IOUser
         }
         return s;
     }
-
-//    public static String getPersonalMessage(){
-//
-//    }
 
 }

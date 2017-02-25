@@ -6,6 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Starting- and endingpoint of this application.
+ */
 public class ClientMain extends Application
 {
     public static void main(String... args)

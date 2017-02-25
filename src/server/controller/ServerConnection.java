@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Multi client server.
+ * This class describes how the multi client server works, and handles the connection with every client.
  */
 public class ServerConnection extends Task<Void>
 {
@@ -175,9 +175,8 @@ public class ServerConnection extends Task<Void>
                 {
                     switch (input.charAt(0))
                     {
-                        case ((char) 182) : // ¶
+                        case ((char) 182) : // ¶ - Register
                         {
-                            //register user
                             updateMessage(input);
                             connection.registerUser(input);
                             username = input.split((char) 182 + "")[1];
@@ -185,9 +184,8 @@ public class ServerConnection extends Task<Void>
                             out.println(connection.sendUserList());
                             break;
                         }
-                        case ((char) 169) : // ©
+                        case ((char) 169) : // © - Login
                         {
-                            //login
                             updateMessage(input);
                             String s = connection.loginUser(input);
                             if (s.equals("true")){
@@ -195,14 +193,6 @@ public class ServerConnection extends Task<Void>
                                 connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 1);
                                 out.println(s + (char) 169 + connection.sendUserList());
                             }
-                            break;
-                        }
-                        case ((char) 181) : //µ
-                        {
-//                            connection.requestChat(input.substring(1));
-                            //chat request
-                            //must handle showUserList()
-                            out.println((char)181 + "Connected to user");
                             break;
                         }
                         case ((char) 209) : //Gets a normal message from this client

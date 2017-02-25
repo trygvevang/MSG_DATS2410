@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
- * Controlling all the scenes for the server application.
+ * Controls the server application, and handles the interaction between frontend and backend.
  */
 public class ServerController implements Initializable, ServerInterface
 {
@@ -62,7 +62,6 @@ public class ServerController implements Initializable, ServerInterface
             @Override
             public void onChanged(Change<? extends String, ? extends String> change)
             {
-//                String client = serverConnection.getClientMessageMap()
                 taLog.setText(serverConnection.getClientMessageMap().toString());
             }
         });
@@ -83,7 +82,6 @@ public class ServerController implements Initializable, ServerInterface
                     int i = lwUsers.getSelectionModel().getSelectedIndex();
                     User temp = users.get(i);
                     taInfo.setText("Username: " + temp.getName() + "\n" + "Password: " + temp.getPassword() + "\n" + "Port: " + temp.getPort() + "\n" + "Ipadress: " + temp.getHostname() + "\n" +
-
                             "Status: " + temp.getStatusString());
                 }
             });
@@ -92,10 +90,6 @@ public class ServerController implements Initializable, ServerInterface
         }
     }
 
-    /**
-     * Called from ServerConnection.
-     * Used to know when to update the list of users in the GUI in the server.
-     */
     @Override
     public void updateUserListServer()
     {

@@ -1,5 +1,8 @@
 package client.controller;
 
+/**
+ * This interface is used to communicate between the JavaFX thread and the ClientThread.
+ */
 public interface ClientInterface
 {
     String getMessage();

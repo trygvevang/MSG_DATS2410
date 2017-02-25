@@ -11,8 +11,9 @@ public class User
     private int status;
 
     /**
-     * Since this class is only accesed by the server controller, there is no need for a control structure towards UID and name.
-     * @param name Full name of this user
+     * Since this class is only accessed by the server controller, there is no need for a control structure towards input in the arguments.
+     * @param name username of this user
+     * @param  password password of this user
      */
     public User(String name, String password)
     {
@@ -22,7 +23,8 @@ public class User
     }
 
     /**
-     * Since this method is only accesed by the server controller, there is no need for a control structure towards hostname and portnumber.
+     * Sets socket information of this user.
+     * Since this method is only accessed by the server controller, there is no need for a control structure towards hostname and portnumber.
      * @param hostname IP address
      * @param port port number
      */
@@ -68,23 +70,35 @@ public class User
 
     /**
      * Returns the password registered for this user.
-     * @return password for the object user
+     * @return password for this user
      */
     public String getPassword()
     {
         return password;
     }
 
+    /**
+     * Assign the status of this user
+     * @param status an integer which represents a status. 0 = Offline, 1 = Online, 2 = Busy
+     */
     public void setStatus(int status)
     {
         this.status = status;
     }
 
+    /**
+     * Returns the status in an integer form. 0 = Offline, 1 = Online, 2 = Busy
+     * @return status of this user
+     */
     public int getStatus()
     {
         return status;
     }
 
+    /**
+     * Returns the status in String form.
+     * @return status of this user
+     */
     public String getStatusString()
     {
         return status == 0 ? "Offline" : (status == 1 ? "Online" : "Busy");
