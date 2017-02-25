@@ -103,6 +103,11 @@ public class IOUser
         return "false";
     }
 
+    /**
+     * Parses the user list to a String used when a client asks for an updated list of status and users
+     * @param users list of users registered on the server
+     * @return users and their status in the format of a String
+     */
     public static String getUserList(ArrayList<User> users)
     {
         String s = "";

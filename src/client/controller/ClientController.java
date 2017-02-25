@@ -71,6 +71,7 @@ public class ClientController implements Initializable, ClientInterface
         twBrukerID.setSortable(false);
         twStatus.setSortable(false);
 
+        //Pattern to check if the entered address is in a valid form
         final Pattern IPPATTERN = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}" +
                                                                          "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
 
@@ -110,11 +111,10 @@ public class ClientController implements Initializable, ClientInterface
             dialog.setTitle("Sign in");
             dialog.setHeaderText("Sign in:");
 
-            // Set the button types.
             ButtonType loginButtonType = new ButtonType("Log in", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CLOSE);
 
-            // Create the sendMessageTo and password labels and fields.
+            // Create the username and password labels and fields.
             GridPane grid = new GridPane();
             grid.setHgap(10);
             grid.setVgap(10);
@@ -130,11 +130,9 @@ public class ClientController implements Initializable, ClientInterface
             grid.add(new Label("Password:"), 0, 1);
             grid.add(password, 1, 1);
 
-            // Enable/Disable login button depending on whether a sendMessageTo was entered.
             Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
             loginButton.setDisable(true);
 
-            // Do some validation (using the Java 8 lambda syntax).
             username.textProperty().addListener((observable, oldValue, newValue) ->
             {
                 loginButton.setDisable(newValue.trim().isEmpty());
@@ -142,10 +140,8 @@ public class ClientController implements Initializable, ClientInterface
 
             dialog.getDialogPane().setContent(grid);
 
-            // Request focus on the sendMessageTo field by default.
             Platform.runLater(() -> username.requestFocus());
 
-            // Convert the result to a sendMessageTo-password-pair when the login button is clicked.
             dialog.setResultConverter(dialogButton ->
             {
                 if (dialogButton == loginButtonType)
@@ -165,7 +161,7 @@ public class ClientController implements Initializable, ClientInterface
                 String uname = usernamePassword.getKey();
                 setMessage((char) 169 + uname + (char) 169 + usernamePassword.getValue());
                 estConnection(host, port);
-                while (true)
+                while (true) //Checks for a response from server
                 {
                     if (validLogin)
                     {
@@ -181,13 +177,13 @@ public class ClientController implements Initializable, ClientInterface
                         }
                     }
                     else
-                    {
+                    {   //Popup if the combination of username and password is wrong
                         Alert failedLogin = new Alert(Alert.AlertType.ERROR);
                         failedLogin.setTitle("Error");
                         failedLogin.setHeaderText("Failed login");
                         failedLogin.setContentText("Wrong username and password combination or\nuser already in use/online.\nPlease restart the client to try again.");
                         failedLogin.showAndWait();
-                        System.exit(0);
+                        System.exit(0); //Shuts down the program after the user clicks a button in the popup
                     }
                 }
             });
@@ -200,42 +196,38 @@ public class ClientController implements Initializable, ClientInterface
             dialog.setTitle("Sign up");
             dialog.setHeaderText("Sign up:");
 
-            // Set the button types.
             ButtonType registerButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().addAll(registerButtonType, ButtonType.CLOSE);
 
-            // Create the sendMessageTo and password labels and fields.
-            GridPane grid = new GridPane();
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new Insets(20, 150, 10, 10));
+            // Create the username and password labels and fields.
+            GridPane pane = new GridPane();
+            pane.setHgap(10);
+            pane.setVgap(10);
+            pane.setPadding(new Insets(20, 150, 10, 10));
 
             TextField username = new TextField();
             username.setPromptText("Username");
             PasswordField password = new PasswordField();
             password.setPromptText("Password");
 
-            grid.add(new Label("Username:"), 0, 0);
-            grid.add(username, 1, 0);
-            grid.add(new Label("Password:"), 0, 1);
-            grid.add(password, 1, 1);
+            pane.add(new Label("Username:"), 0, 0);
+            pane.add(username, 1, 0);
+            pane.add(new Label("Password:"), 0, 1);
+            pane.add(password, 1, 1);
 
-            // Enable/Disable login button depending on whether a sendMessageTo was entered.
             Node registerButton = dialog.getDialogPane().lookupButton(registerButtonType);
             registerButton.setDisable(true);
 
-            // Do some validation (using the Java 8 lambda syntax).
             username.textProperty().addListener((observable, oldValue, newValue) ->
             {
                 registerButton.setDisable(newValue.trim().isEmpty());
             });
 
-            dialog.getDialogPane().setContent(grid);
+            dialog.getDialogPane().setContent(pane);
 
-            // Request focus on the sendMessageTo field by default.
             Platform.runLater(() -> username.requestFocus());
 
-            // Convert the result to a sendMessageTo-password-pair when the login button is clicked.
+            // Convert the result to a username-password-pair when the sign up button is pressed.
             dialog.setResultConverter(dialogButton ->
             {
                 if (dialogButton == registerButtonType)

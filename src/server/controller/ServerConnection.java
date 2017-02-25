@@ -146,6 +146,11 @@ public class ServerConnection extends Task<Void>
         Socket socket;
         ServerConnection connection;
 
+        /**
+         * Constructor for this class.
+         * @param socket used by the client connected to this thread
+         * @param connection takes the outer class as a parameter
+         */
         ClientService(Socket socket, ServerConnection connection)
         {
             this.socket = socket;
