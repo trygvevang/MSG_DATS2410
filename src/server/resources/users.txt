@@ -5,5 +5,3 @@
 ¶batman¶robin
 ¶wonder¶woman
 ¶luke¶cage
-¶jess¶jones
-¶flash¶the

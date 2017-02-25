@@ -74,7 +74,7 @@ public class ClientController implements Initializable, ClientInterface
         final Pattern IPPATTERN = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}" +
                                                                          "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
 
-        // Ip selection
+        // Host address selection
         TextInputDialog ipdialog = new TextInputDialog("127.0.0.1");
         ipdialog.setTitle("IP address of the server");
         ipdialog.setHeaderText("What IP address do the server have?");
@@ -87,8 +87,9 @@ public class ClientController implements Initializable, ClientInterface
         }
         else
             System.exit(0);
+        // End of host address selection
 
-
+        // Choose whether to log in, register, or cancel
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Message Application - Client");
         alert.setHeaderText("Sign in or sign up");
@@ -100,6 +101,7 @@ public class ClientController implements Initializable, ClientInterface
 
         alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel2);
 
+        // Log in
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == buttonTypeOne)
         {
@@ -161,8 +163,6 @@ public class ClientController implements Initializable, ClientInterface
             resultSubmit.ifPresent(usernamePassword ->
             {
                 String uname = usernamePassword.getKey();
-                System.out.println("Username=" + uname + ", Password=" + usernamePassword
-                        .getValue());
                 setMessage((char) 169 + uname + (char) 169 + usernamePassword.getValue());
                 estConnection(host, port);
                 while (true)
@@ -191,6 +191,7 @@ public class ClientController implements Initializable, ClientInterface
                     }
                 }
             });
+        // Register
         } else if (result.get() == buttonTypeTwo)
         {
             //New AlertBox for signing up
@@ -253,14 +254,13 @@ public class ClientController implements Initializable, ClientInterface
             resultSubmit.ifPresent(usernamePassword ->
             {
                 estConnection(host, port);
-                System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword
-                        .getValue());
                 setYourUsername(usernamePassword.getKey());
                 setMessage((char) 182 + getYourUsername() + (char) 182 + usernamePassword.getValue());
             });
-        } else
+        }
+        //Exit the Client
+        else
         {
-            //Exit the Client
             System.exit(0);
         }
     }
@@ -343,7 +343,6 @@ public class ClientController implements Initializable, ClientInterface
             System.err.println(e.getMessage());
         }
         String username;
-        System.out.println();
         List<String> onlineUsers = new ArrayList<>();
         for (ClientUser user : userObservableList) {
             if (user.getStatus() == 1) onlineUsers.add(user.getName());
@@ -362,7 +361,6 @@ public class ClientController implements Initializable, ClientInterface
             Optional<String> result = cdialog.showAndWait();
             if (result.isPresent()) {
                 setSendMessageTo((char) 209 + result.get());
-                System.out.println("Your choice: " + result.get());
                 taConv.appendText("You connected with: " + result.get() + "\n");
             }
         }
@@ -464,7 +462,6 @@ public class ClientController implements Initializable, ClientInterface
     {
         if (s != null && !s.equals("null") && s.length() > 0)
         {
-            System.out.println("Print message: " + s);
             if (s.charAt(0) == (char) 231)
             {
                 taConv.appendText(s.substring(1) + " left the chat.\n");

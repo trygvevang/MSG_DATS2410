@@ -91,7 +91,6 @@ public class ClientThread extends Task<Void>
 
                     case ((char) 209) :
                         //Send message
-                        System.out.println(connection.getMessage());
                         out.println(connection.getMessage());
                         connection.setMessage("Message Sent!");
                         connection.setUserList(in.readLine());
@@ -99,7 +98,6 @@ public class ClientThread extends Task<Void>
 
                     case ((char) 210) :
                         out.println(connection.getMessage());
-//                        connection.printServerMessage(in.readLine());
                         connection.setMessage("Disconnected from chat.");
                         break;
 
@@ -109,13 +107,13 @@ public class ClientThread extends Task<Void>
                         connection.setUserList(in.readLine());
                         connection.setMessage("Updated userlist");
                         break;
+
                     case ((char) 199):
-                        System.out.println("Client thread 199:    " + connection.getMessage());
                         out.println(connection.getMessage());
                         connection.setMessage("Sent disconnect");
                         break;
+
                     default :
-                        System.out.println("Default here");
                         out.println((char) 224);
                         connection.printMessage(in.readLine());
                         break;
@@ -127,9 +125,7 @@ public class ClientThread extends Task<Void>
         finally
         {
             out.println((char) 222 + "Logging out");
-            System.out.println(System.currentTimeMillis());
             sleep(1000);
-            System.out.println(System.currentTimeMillis());
             out.println("EXIT");
             socket.close();
             sleep(500);
