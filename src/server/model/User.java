@@ -27,6 +27,7 @@ public class User
      * Since this method is only accessed by the server controller, there is no need for a control structure towards hostname and portnumber.
      * @param hostname IP address
      * @param port port number
+     * @param status status of the user
      */
     public void setSocketInfo(String hostname, int port, int status)
     {

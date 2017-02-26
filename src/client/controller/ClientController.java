@@ -278,7 +278,8 @@ public class ClientController implements Initializable, ClientInterface
 
         if (!getSendMessageTo().equals(""))
         {
-            setMessage(getSendMessageTo() + (char) 209 + getYourUsername() + ": " + taMsg.getText());
+            String msg = taMsg.getText().replaceAll("\n", (char) 215 + "");
+            setMessage(getSendMessageTo() + (char) 209 + getYourUsername() + ": " + msg);
             taConv.appendText(getYourUsername() + ": " + taMsg.getText() + "\n");
             taMsg.setText("");
         }
@@ -461,7 +462,8 @@ public class ClientController implements Initializable, ClientInterface
                 setSendMessageTo("");
             }else{
             setSendMessageTo((char) 209 + s.split(":")[0]);
-            taConv.appendText(s + "\n");
+            String msg = s.replaceAll((char) 215 + "", "\n");
+            taConv.appendText(msg + "\n");
             }
         }
     }
