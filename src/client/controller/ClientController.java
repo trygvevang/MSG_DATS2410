@@ -71,11 +71,12 @@ public class ClientController implements Initializable, ClientInterface
         twBrukerID.setSortable(false);
         twStatus.setSortable(false);
 
-        //Pattern to check if the entered address is in a valid IP address form
-        final Pattern IPPATTERN = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
         /*
-            RegEx expression taken from: http://stackoverflow.com/questions/5667371/validate-ipv4-address-in-java
+            Pattern to check if the entered address is in a valid IP address form
+            Regular Expression is downloaded february 24th 2017 from: http://stackoverflow
+            .com/questions/5667371/validate-ipv4-address-in-java
          */
+        final Pattern IPPATTERN = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
 
         // Host address selection
         TextInputDialog ipdialog = new TextInputDialog("127.0.0.1");
