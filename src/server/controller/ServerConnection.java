@@ -30,6 +30,11 @@ public class ServerConnection extends Task<Void>
     private ServerInterface serverInterface;
 
 
+    /**
+     * Constructor for ServerConnection.
+     * @param port to run the server on
+     * @param serverInterface to communicate with non-static methods in ServerController
+     */
     public ServerConnection(int port, ServerInterface serverInterface)
     {
         userChatQueues = new HashMap<>();
@@ -75,6 +80,11 @@ public class ServerConnection extends Task<Void>
         return null;
     }
 
+    /**
+     * Adds a message to the recipient of this message.
+     * @param username recipient of the message
+     * @param msg message sent from a user to the recipient
+     */
     private void addPersonalMessage(String username, String msg)
     {
         ConcurrentLinkedQueue<String> correctQueue;
@@ -87,6 +97,11 @@ public class ServerConnection extends Task<Void>
         correctQueue.add(msg);
     }
 
+    /**
+     * Checks if a user has a message waiting to be sent. If so the Server sends this to the appropriate user.
+     * @param username of the user that asks for a check in his messagequeue
+     * @return the message if there is any
+     */
     private String getQueueMsg(String username)
     {
         ConcurrentLinkedQueue<String> userQueue = userChatQueues.get(username);
@@ -96,6 +111,10 @@ public class ServerConnection extends Task<Void>
         return null;
     }
 
+
+    /*
+     * getters for private fields
+     */
     ArrayList<User> getUser(){
         return users;
     }
@@ -105,7 +124,15 @@ public class ServerConnection extends Task<Void>
         return clientMessageMap;
     }
 
-    public void updateUserConnection(String username, String host, int port, int status)
+
+    /**
+     * Updates the status, address, port of the client that asks for this to be called.
+     * @param username of the client
+     * @param host of the client
+     * @param port of the client
+     * @param status set the status of the user
+     */
+    private void updateUserConnection(String username, String host, int port, int status)
     {
         host = host.substring(1);
         for (User user : users)
@@ -118,6 +145,11 @@ public class ServerConnection extends Task<Void>
         serverInterface.updateUserListServer();
     }
 
+    /**
+     * Sends the updated user list to the client. The list has to be in the format of a String
+     * so the PrintWriter is able to send the information.
+     * @return the list in the format of a String
+     */
     private String sendUserList()
     {
         return IOUser.getUserList(users);
@@ -127,11 +159,19 @@ public class ServerConnection extends Task<Void>
         IOUser.register(users, input);
     }
 
+    /**
+     * Sends the boolean value of the login credentials to the client. The list has to be in the format of a String
+     * so the PrintWriter is able to send the information.
+     * @return a boolean in the format of a String (e.g "true" | "false")
+     */
     private String loginUser(String input)
     {
         return IOUser.logIn(users, input);
     }
 
+    /**
+     * Starts the thread.
+     */
     public void start()
     {
         Thread th = new Thread(this);
@@ -139,7 +179,9 @@ public class ServerConnection extends Task<Void>
     }
 
 
-
+    /**
+     * Static class used by the ServerConnection to instantiate a thread for a connection with a client
+     */
     private static class ClientService extends Service<Void>
     {
 
@@ -201,7 +243,7 @@ public class ServerConnection extends Task<Void>
                             break;
                         }
                         case ((char) 209) : //Gets a normal message from this client
-                        {   // 209 USERNAME 209 MESSAGE
+                        {
                             String[] info = input.split(String.valueOf((char) 209));
                             connection.updateUserConnection(username, socket.getInetAddress().toString(), socket.getPort(), 2);
                             connection.addPersonalMessage(info[1], info[2]);

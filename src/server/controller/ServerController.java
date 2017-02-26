@@ -31,6 +31,9 @@ public class ServerController implements Initializable, ServerInterface
     private ArrayList<User> users;
     private ObservableList<User> oUsers;
 
+    /**
+     * Constructor for ServerController.
+     */
     public ServerController()
     {
         serverConnection = new ServerConnection(6789, this);
@@ -44,6 +47,9 @@ public class ServerController implements Initializable, ServerInterface
         updateList();
     }
 
+    /**
+     * Updates the user list, that is shown in the far left column in the server GUI.
+     */
     private void updateShowedList()
     {
         users = serverConnection.getUser();
@@ -56,6 +62,9 @@ public class ServerController implements Initializable, ServerInterface
         showUInfo();
     }
 
+    /**
+     * Updates the list of connections in the far right column.
+     */
     private void updateList(){
         serverConnection.getClientMessageMap().addListener(new MapChangeListener<String, String>()
         {
@@ -68,7 +77,9 @@ public class ServerController implements Initializable, ServerInterface
         updateShowedList();
     }
 
-
+    /**
+     * Shows the user information in the middle column in the server.
+     */
     private void showUInfo()
     {
         try
