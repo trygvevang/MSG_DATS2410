@@ -74,10 +74,10 @@ public class ClientThread extends Task<Void>
                         //Register
                         out.println(connection.getMessage());
                         connection.setUserList(in.readLine());
-                        connection.setMessage("Finnished registering");
+                        connection.setMessage("Finished registering");
                         break;
 
-                    case ((char) 169) :
+                    case ((char) 169) : //Log in
                         out.println(connection.getMessage());
                         String[] tokens = in.readLine().split((char) 169 + "");
                         recieved = tokens[0];
@@ -86,34 +86,32 @@ public class ClientThread extends Task<Void>
                             connection.setValidLogin();
                             connection.setUserList(tokens[1]);
                         }
-                        connection.setMessage("Finnished logging in");
+                        connection.setMessage("Finished logging in");
                         break;
 
-                    case ((char) 209) :
-                        //Send message
+                    case ((char) 209) : //Send message
                         out.println(connection.getMessage());
                         connection.setMessage("Message Sent!");
                         connection.setUserList(in.readLine());
                         break;
 
-                    case ((char) 210) :
+                    case ((char) 210) : //Disconnect from chat
                         out.println(connection.getMessage());
                         connection.setMessage("Disconnected from chat.");
                         break;
 
-                    //set message til char 222 som ber om ny oppdatert ulist
-                    case ((char) 223) :
+                    case ((char) 223) : // Request updated list
                         out.println((char)  223 + " Update List");
                         connection.setUserList(in.readLine());
                         connection.setMessage("Updated userlist");
                         break;
 
-                    case ((char) 199):
+                    case ((char) 199): //Disconnect from chat
                         out.println(connection.getMessage());
                         connection.setMessage("Sent disconnect");
                         break;
 
-                    default :
+                    default : //Requests latest message for this client
                         out.println((char) 224);
                         connection.printMessage(in.readLine());
                         break;
